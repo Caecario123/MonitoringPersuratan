@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
 use App\Models\File;
 use App\Models\Filebalas;
 use App\Models\Letters;
 use App\Models\OutgoingLetter;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 
 class HomeController extends Controller
@@ -219,7 +220,7 @@ class HomeController extends Controller
         $data['disposition_process'] = $request->disposition_process;
         
         Letters::whereId($id)->update($data);
-        return redirect()->route('dashboard');
+        return redirect()->route('seksi1.dashboard');
    
     }
     public function detailSurat(Request $request,$id){
@@ -229,7 +230,7 @@ class HomeController extends Controller
 
         $letter = Letters::find($id);
         // dd($data);
-        return view('detailsurat',compact('letter'));
+        return redirect()->route('dashboard');
 
     }
 

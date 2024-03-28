@@ -65,7 +65,7 @@ class OutgoingController extends Controller
         return "No PDF uploaded.";
     }
 
-    return redirect()->route('dashboard');
+    return redirect()->route('seksi1.dashboard');
     }
     public function daftarbalasan($id)
     {
@@ -74,7 +74,7 @@ class OutgoingController extends Controller
         return view('daftarbalasan', compact('outgoingLetter'));
     }
     public function streamOutgoingPDF($id)
-{
+    {
 
     $path = Filebalas::where('letter_balas_id', $id)->value('path');
   
@@ -85,5 +85,5 @@ class OutgoingController extends Controller
     ];
     return response()->file($pdfPath, $headers);
    
-}
+    }
 }
