@@ -20,7 +20,15 @@ class HomeController extends Controller
     }
     public function adminDashboard()
     {
-        return view('adminDashboard');
+        $user = User::all(); // Menggunakan model Letter untuk mengambil data
+
+        $data = Letters::all(); // Assuming you're fetching data for a welcome page
+        $data2 = File::all(); // Assuming you're fetching data for a welcome page
+
+        $datas = $data2->merge($data);
+
+        
+        return view('adminDashboard', compact('datas'));
     }
     public function kakanDashboard()
     {

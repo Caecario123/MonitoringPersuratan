@@ -131,12 +131,29 @@
           <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
         </div>
       </li>
+
+       @php
+            $nilai=[]
+        @endphp
+        @php
+        $unreadCount = 0; // Inisialisasi penghitung untuk notifikasi yang belum dibaca
+        @endphp
+        
+        @foreach ($datas as $notif)
+            @php
+                if ($notif->read_status == 0) {
+                    $unreadCount++; // Menambahkan penghitung jika read_status sama dengan 1
+                }
+                $nilai[] = $notif->read_status;  
+            @endphp
+        @endforeach
       <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
-          <span class="badge badge-warning navbar-badge">15</span>
+          <span class="badge badge-warning navbar-badge">{{ $unreadCount }}</span>
         </a>
+        
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <span class="dropdown-item dropdown-header">15 Notifications</span>
           <div class="dropdown-divider"></div>
