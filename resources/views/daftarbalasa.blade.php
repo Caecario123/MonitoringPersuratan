@@ -78,7 +78,7 @@
         <a href="{{ route('logout') }}">
             <button>Logout</button>
         </a>
-        <a href="{{ route('dashboard') }}">
+        <a href="{{ route('seksi1.dashboard') }}">
             <button>Kembali</button>
         </a> 
     
