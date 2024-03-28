@@ -79,7 +79,7 @@
             <button>Logout</button>
         </a>
         <a href="{{ route('seksi1.dashboard') }}">
-            <button>Kembali</button>
+            <button>Kembali </button>
         </a> 
     
     </div>
