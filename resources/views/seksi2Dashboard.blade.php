@@ -260,23 +260,19 @@
           </div>
         </div>
       </div>
-
+      @php
+      $user = auth()->user()->type;
+      $type = $user.".";
+      @endphp
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                <li class="nav-item">
-                <a href="{{ route('seksi2.dashboard') }}" class="nav-link">
+                
+                <a href="{{ route($type.'dashboard') }}" class="nav-link">
                   <i class="nav-icon fas fa-th"></i>
                   <p>
                     Dashboard
-                  </p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.index') }}" class="nav-link">
-                  <i class="nav-icon fas fa-th"></i>
-                  <p>
-                    Users
                   </p>
                 </a>
               </li>
@@ -326,7 +322,7 @@
                 @foreach ($datas as $letter)
                     <tr>
 
-                        <td><a href="{{ route('letters.detailSurat',['id'=>$letter->id]) }}">
+                        <td><a href="{{ route($type.'letters.detailSurat',['id'=>$letter->id]) }}">
                             {{ $letter->id }}</a>
                         </td>
 
@@ -340,29 +336,25 @@
                         <td>{{ $letter->disposition_note }}</td>
                         <td>
                             @if ($letter->disposition_process == "")
-                                <a href="{{ route('letters.disposisi',['id'=>$letter->id]) }}">
                                     <button>Belum di disposisi</button>
-                                </a>
                             @endif
-                            <a href="{{ route('letters.disposisi',['id'=>$letter->id]) }}">
                                 {{ $letter->disposition_process }}
-                            </a>
                         </td>
                         <td>{{ $letter->status }}</td>
                         <td>{{ $letter->user_id }}</td>
-                        <td><a href="{{ route('letters.balasan',['id'=>$letter->id]) }}">
+                        <td><a href="{{ route($type.'letters.balasan',['id'=>$letter->id]) }}">
                             @if ($letter->disposition_process != "Belum ditindak lanjuti")
                             balas
                             @endif
                             </a>
                         </td>
                         <td>
-                            <a href="{{ route('file.streamPDF', ['id' => $letter->id]) }}">
+                            <a href="{{ route($type.'file.streamPDF', ['id' => $letter->id]) }}">
                                 <i class="fa fa-file" style="font-size:24px"></i>
                             </a>
                             
                             @if ($letter->status == "Complete")
-                            <a href="{{ route('daftarbalasan',['id'=>$letter->id]) }}">
+                            <a href="{{ route($type.'daftarbalasan',['id'=>$letter->id]) }}">
                                 <i class="fa fa-file" style="font-size:24px;color:red"></i>
                             </a>
                         @endif
@@ -372,9 +364,6 @@
                 @endforeach
             </tbody>
         </table>
-        <a href="{{ route('letters.tambahsurat') }}">
-            <button>Tambah Surat</button>
-        </a> 
     </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">

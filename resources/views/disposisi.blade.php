@@ -48,7 +48,8 @@
             <div>
                 <label for="disposition_process">Tindaklanjut Disposisi:</label>
                 <select id="disposition_process" name="disposition_process">
-                    <option value="Seksi penetapan hak dan pendaftaran) ">Seksi penetapan hak dan pendaftaran </option>
+                    <option value="Tata Usaha">Tata Usaha</option>
+                    <option value="Seksi penetapan hak dan pendaftaran">Seksi penetapan hak dan pendaftaran </option>
                     <option value="Seksi survei dan pemetaan">Seksi survei dan pemetaan</option>
                     <option value="Seksi penataan dan pemberdayaan">Seksi penataan dan pemberdayaan</option>
                     <option value="Seksi pengadaan tanah dan pengembangan">Seksi pengadaan tanah dan pengembangan</option>

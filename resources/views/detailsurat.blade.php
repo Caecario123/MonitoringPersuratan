@@ -47,11 +47,11 @@
     <div>
         <h2>File Surat</h2>
         <ul>
-            <li><a href="{{ route('file.streamPDF', ['id' => $letter->id]) }}">Lihat Surat (PDF)</a></li>
+            <li><a href="{{ route($type.'file.streamPDF', ['id' => $letter->id]) }}">Lihat Surat (PDF)</a></li>
             <!-- Tambahkan tautan ke file surat lainnya sesuai kebutuhan -->
         </ul>
     </div>
 
-    <a href="{{ route('dashboard') }}">Kembali ke Dashboard</a>
+    <a href="{{ route($type.'dashboard') }}">Kembali ke Dashboard</a>
 </body>
 </html>

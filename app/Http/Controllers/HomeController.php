@@ -42,34 +42,39 @@ class HomeController extends Controller
     }
     public function tatausahaDashboard()
     {
-        return view('tatausahaDashboard');
+        $user = User::all();
+        $datas = Letters::where('disposition_process', 'Tata Usaha')->get();
+        return view('tatausahaDashboard', compact('datas'));
     }
     public function seksi1Dashboard()
     {
-        $user = User::all(); // Menggunakan model Letter untuk mengambil data
-
-        $data = Letters::all(); // Assuming you're fetching data for a welcome page
-        $data2 = File::all(); // Assuming you're fetching data for a welcome page
-
-        $datas = $data2->merge($data);
-
+        $user = User::all();
+        $datas = Letters::where('disposition_process', 'Seksi penetapan hak dan pendaftaran')->get();
         return view('seksi1Dashboard', compact('datas'));
     }
     public function seksi2Dashboard()
     {
-        return view('seksi2Dashboard');
+        $user = User::all();
+        $datas = Letters::where('disposition_process', 'Seksi survei dan pemetaan')->get();
+        return view('seksi2Dashboard', compact('datas'));
     }
     public function seksi3Dashboard()
     {
-        return view('seksi3Dashboard');
+        $user = User::all();
+        $datas = Letters::where('disposition_process', 'Seksi penataan dan pemberdayaan')->get();
+        return view('seksi3Dashboard', compact('datas'));
     }
     public function seksi4Dashboard()
     {
-        return view('seksi4Dashboard');
+        $user = User::all();
+        $datas = Letters::where('disposition_process', 'Seksi pengadaan tanah dan pengembangan')->get();
+        return view('seksi4Dashboard', compact('datas'));
     }
     public function seksi5Dashboard()
     {
-        return view('seksi5Dashboard');
+        $user = User::all();
+        $datas = Letters::where('disposition_process', 'Seksi pengendalian dan penanganan sengketa')->get();
+        return view('seksi5Dashboard', compact('datas'));
     }
     public function index(){
         $data = User::get();
