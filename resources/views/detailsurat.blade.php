@@ -35,7 +35,11 @@
     <div>
         <h2>Tindakan</h2>
         <ul>
-            <li><a href="{{ route('letters.balasan',['id'=>$letter->id]) }}">Balas Surat</a></li>
+            @php
+            $user = auth()->user()->type;
+            $type = $user.".";
+            @endphp
+            <li><a href="{{ route($type.'letters.balasan',['id'=>$letter->id]) }}">Balas Surat</a></li>
             <!-- Tambahkan tindakan lainnya sesuai kebutuhan -->
         </ul>
     </div>

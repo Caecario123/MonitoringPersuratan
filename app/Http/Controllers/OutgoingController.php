@@ -65,8 +65,11 @@ class OutgoingController extends Controller
         return "No PDF uploaded.";
     }
 
-    return redirect()->route('seksi1.dashboard');
+    $user = auth()->user()->type;
+    $type = $user.".";
+    return redirect()->route($type.'dashboard');
     }
+    
     public function daftarbalasan($id)
     {
         

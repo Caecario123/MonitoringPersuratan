@@ -25,6 +25,46 @@
   <link rel="stylesheet" href="{{ asset('lte/plugins/daterangepicker/daterangepicker.css')}}">
   <!-- summernote -->
   <link rel="stylesheet" href="{{ asset('lte/plugins/summernote/summernote-bs4.min.css')}}">
+  
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+  
+      th, td {
+        border: 1px solid #ddd;
+        text-align: left;
+      }
+  
+      th {
+        background-color: #f2f2f2;
+      }
+  
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+  
+      tr:hover {
+        background-color: #ddd;
+      }
+  
+      .action-buttons {
+        display: flex;
+        gap: 5px;
+      }
+  
+      .action-buttons a {
+        text-decoration: none;
+        color: #007bff;
+      }
+  
+      .action-buttons button {
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+    </style>
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -258,6 +298,83 @@
 
   <!-- Content Wrapper. Contains page content -->
   @yield('content')
+ 
+
+    <!-- Content -->
+   
+    <div style="width:83%;float: right;">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tanggal Penerima</th>
+                    <th>Jenis Surat</th>
+                    <th>Nomor Surat</th>
+                    <th>Tanggal Surat</th>
+                    <th>Pengirim</th>
+                    <th>Perihal</th>
+                    <th>Tanggal Disposisi</th>
+                    <th>Catatan Disposisi</th>
+                    <th>Tindak Lanjut Kasubag</th>
+                    <th>Status</th>
+                    <th>User ID</th>
+                    <th>Tindakan</th>
+                    <th>File</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($datas as $letter)
+                    <tr>
+
+                        <td><a href="{{ route('admin.letters.detailSurat',['id'=>$letter->id]) }}">
+                            {{ $letter->id }}</a>
+                        </td>
+                        <td>{{ $letter->received_date }}</td>
+                        <td>{{ $letter->letters_type }}</td>
+                        <td>{{ $letter->reference_number }}</td>
+                        <td>{{ $letter->letter_date }}</td>
+                        <td>{{ $letter->from }}</td>
+                        <td>{{ $letter->description }}</td>
+                        <td>{{ $letter->disposition_date }}</td>
+                        <td>{{ $letter->disposition_note }}</td>
+                        <td>
+                            @if ($letter->disposition_process == "")
+                                <a href="{{ route('admin.letters.disposisi',['id'=>$letter->id]) }}">
+                                    <button>Belum di disposisi</button>
+                                </a>
+                            @endif
+                            <a href="{{ route('admin.letters.disposisi',['id'=>$letter->id]) }}">
+                                {{ $letter->disposition_process }}
+                            </a>
+                        </td>
+                        <td>{{ $letter->status }}</td>
+                        <td>{{ $letter->user_id }}</td>
+                        <td><a href="{{ route('admin.letters.balasan',['id'=>$letter->id]) }}">
+                            @if ($letter->disposition_process != "Belum ditindak lanjuti")
+                            balas
+                            @endif
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ route('admin.file.streamPDF', ['id' => $letter->id]) }}">
+                                <i class="fa fa-file" style="font-size:24px"></i>
+                            </a>
+                            
+                            @if ($letter->status == "Complete")
+                            <a href="{{ route('admin.daftarbalasan',['id'=>$letter->id]) }}">
+                                <i class="fa fa-file" style="font-size:24px;color:red"></i>
+                            </a>
+                        @endif
+                        </td>
+                    </tr>
+                
+                @endforeach
+            </tbody>
+        </table>
+        <a href="{{ route('admin.letters.tambahsurat') }}">
+            <button>Tambah Surat</button>
+        </a> 
+    </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>

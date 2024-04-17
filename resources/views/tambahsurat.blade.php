@@ -9,7 +9,11 @@
 <body>
     <div class="container">
         <h2>Add New Letter</h2>
-        <form action="{{ route('letters.store2') }}" method="post" enctype="multipart/form-data">
+        @php
+            $user = auth()->user()->type;
+            $type = $user.".";
+        @endphp
+        <form action="{{ route($type.'letters.store2') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div>
                 <label for="reference_number">Reference Number:</label>
@@ -43,6 +47,13 @@
                 <label for="description">Description:</label>
                 <textarea id="description" name="description"></textarea>
                 @error('description')
+                    <div>{{ $message }}</div>
+                @enderror
+            </div>
+            <div>
+                <label for="from">Pengirim:</label>
+                <input type="text" id="from" name="from" value="{{ old('from') }}">
+                @error('Pengirim')
                     <div>{{ $message }}</div>
                 @enderror
             </div>

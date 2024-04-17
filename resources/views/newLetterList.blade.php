@@ -154,12 +154,15 @@
                 @endforeach
             </tbody>
         </table>
-        
-        <a href="{{ route('dashboard') }}">
+        @php
+        $user = auth()->user()->type;
+        $type = $user.".";
+        @endphp
+        <a href="{{ route($type.'dashboard') }}">
             <button>Kembali ke Dashboard</button>
         </a>
 
-        <a href="{{ route('letters.tambahsurat') }}">
+        <a href="{{ route($type.'letters.tambahsurat') }}">
             <button>Tambah Surat</button>
         </a> 
     </div>

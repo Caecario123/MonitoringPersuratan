@@ -9,7 +9,11 @@
 <body>
     <div class="container">
         <h2>Add New Letter</h2>
-        <form action="{{ route('letters.disposisikan',['id'=>$data->id]) }}" method="post">
+        @php
+        $user = auth()->user()->type;
+        $type = $user.".";
+        @endphp
+        <form action="{{ route($type.'letters.disposisikan',['id'=>$data->id]) }}" method="post">
             @csrf
             @method('PUT')
             <p>surat nomor:{{ $data->reference_number}}</p>

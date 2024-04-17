@@ -9,7 +9,11 @@
 <body>
     <div class="container">
         <h2>Balasan</h2>
-        <form action="{{ route('balasansurat') }}" method="post"enctype="multipart/form-data">
+        @php
+        $user = auth()->user()->type;
+        $type = $user.".";
+        @endphp
+        <form action="{{ route($type.'balasansurat') }}" method="post"enctype="multipart/form-data">
             @csrf
             <p>surat nomor:{{ $data->reference_number}}</p>
             

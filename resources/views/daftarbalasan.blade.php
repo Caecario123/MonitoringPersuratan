@@ -78,7 +78,11 @@
         <a href="{{ route('logout') }}">
             <button>Logout</button>
         </a>
-        <a href="{{ route('seksi1.dashboard') }}">
+        @php
+        $user = auth()->user()->type;
+        $type = $user.".";
+        @endphp
+        <a href="{{ route($type.'dashboard') }}">
             <button>Kembali </button>
         </a> 
     

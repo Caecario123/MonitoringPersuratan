@@ -16,6 +16,12 @@ use Illuminate\Support\Facades\Validator;
 class HomeController extends Controller
 {
     public function dashboard(){
+        $user = User::all(); // Menggunakan model Letter untuk mengambil data
+
+        $data = Letters::all(); // Assuming you're fetching data for a welcome page
+        $data2 = File::all(); // Assuming you're fetching data for a welcome page
+
+        $datas = $data2->merge($data);
         return view('dashboard');
     }
     public function adminDashboard()
@@ -200,8 +206,9 @@ class HomeController extends Controller
         $data = Letters::all(); // Assuming you're fetching data for a welcome page
         $data2 = File::all(); // Assuming you're fetching data for a welcome page
         $datas = $data2->merge($data);
-
-        return redirect()->route('seksi1.dashboard');
+        $user = auth()->user()->type;
+        $type = $user.".";
+        return redirect()->route($type.'dashboard');
     }
     public function disposisi(Request $request,$id){
         $data = Letters::find($id);
@@ -228,8 +235,9 @@ class HomeController extends Controller
         $data['disposition_process'] = $request->disposition_process;
         
         Letters::whereId($id)->update($data);
-        return redirect()->route('seksi1.dashboard');
-   
+        $user = auth()->user()->type;
+        $type = $user.".";
+        return redirect()->route($type.'dashboard');   
     }
     public function detailSurat(Request $request,$id){
         $data['read_status'] = $request->input('read_status', '1');
@@ -238,7 +246,7 @@ class HomeController extends Controller
 
         $letter = Letters::find($id);
         // dd($data);
-        return redirect()->route('dashboard');
+        return view('detailsurat',compact('letter'));
 
     }
 
