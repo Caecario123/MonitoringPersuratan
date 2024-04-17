@@ -44,6 +44,7 @@ Route::middleware(['auth', 'user-access:user'])->group(function () {
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
    
     Route::get('/admin/dashboard', [HomeController::class, 'adminDashboard'])->name('admin.dashboard');
+    Route::get('/admin/tambahsurat', [HomeController::class, 'tambahsurat'])->name('admin.letters.tambahsurat');
 
     Route::get('/user',[HomeController::class,'index'])->name('admin.index');
     Route::get('/create',[HomeController::class,'create'])->name('admin.user.create');
@@ -59,10 +60,10 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::put('/update/{id}',[HomeController::class,'update'])->name('admin.user.update');
     Route::delete('/delete/{id}',[HomeController::class,'delete'])->name('admin.user.delete');
     Route::get('/admin/streamPDF/{id}', [HomeController::class, 'streamPDF'])->name('admin.file.streamPDF');
-    Route::get('/admin/tambahsurat', [HomeController::class, 'tambahsurat'])->name('admin.letters.tambahsurat');
     Route::get('/admin/detailsurat{id}', [HomeController::class, 'detailSurat'])->name('admin.letters.detailSurat');
     Route::post('/admin/store2', [HomeController::class, 'store2'])->name('admin.letters.store2');
 
+    Route::get('/admin/streamOutgoingPDF{id}', [OutgoingController::class, 'streamOutgoingPDF'])->name('admin.filebalasan.streamOutgoingPDF');
 
 });
 
@@ -70,11 +71,11 @@ Route::middleware(['auth', 'user-access:kakan'])->group(function () {
    
     Route::get('/kakan/dashboard', [HomeController::class, 'kakanDashboard'])->name('kakan.dashboard');
 
-    Route::get('/admin/daftarbalasan{id}', [OutgoingController::class, 'daftarbalasan'])->name('admin.daftarbalasan');
-    Route::get('/admin/streamPDF/{id}', [HomeController::class, 'streamPDF'])->name('admin.file.streamPDF');
-    Route::get('/admin/tambahsurat', [HomeController::class, 'tambahsurat'])->name('admin.letters.tambahsurat');
-    Route::get('/admin/detailsurat{id}', [HomeController::class, 'detailSurat'])->name('admin.letters.detailSurat');
-    Route::post('/admin/store2', [HomeController::class, 'store2'])->name('admin.letters.store2');
+    Route::get('/kakan/daftarbalasan{id}', [OutgoingController::class, 'daftarbalasan'])->name('kakan.daftarbalasan');
+    Route::get('/kakan/streamPDF/{id}', [HomeController::class, 'streamPDF'])->name('kakan.file.streamPDF');
+    Route::get('/kakan/tambahsurat', [HomeController::class, 'tambahsurat'])->name('kakan.letters.tambahsurat');
+    Route::get('/kakan/detailsurat{id}', [HomeController::class, 'detailSurat'])->name('kakan.letters.detailSurat');
+    Route::post('/kakan/store2', [HomeController::class, 'store2'])->name('kakan.letters.store2');
 });
 Route::middleware(['auth', 'user-access:tatausaha'])->group(function () {
    

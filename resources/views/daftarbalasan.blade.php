@@ -66,7 +66,11 @@
                     <td>{{ $balasan->outgoing_letter_date }}</td>
                     <td>{{ $balasan->note }}</td>
                     <td>
-                        <a href="{{ route('filebalasan.streamOutgoingPDF', ['id' => $balasan->id]) }}">
+                        @php
+                        $user = auth()->user()->type;
+                        $type = $user.".";
+                        @endphp 
+                        <a href="{{ route($type.'filebalasan.streamOutgoingPDF', ['id' => $balasan->id]) }}">
                             <i class="fa fa-file" style="font-size:24px"></i>
                         </a>                  
                     </td>
