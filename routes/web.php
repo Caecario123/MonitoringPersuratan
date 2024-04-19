@@ -63,6 +63,13 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
     Route::get('/admin/detailsurat{id}', [HomeController::class, 'detailSurat'])->name('admin.letters.detailSurat');
     Route::post('/admin/store2', [HomeController::class, 'store2'])->name('admin.letters.store2');
 
+    Route::get('/admin/deleteLetter{id}', [HomeController::class, 'deleteLetter'])->name('admin.deleteLetter');
+    Route::get('/admin/deleteOutgoingLetter{id}', [OutgoingController::class, 'deleteOutgoingLetter'])->name('admin.deleteOutgoingLetter');
+    Route::get('/admin/editLetter{id}', [HomeController::class, 'editLetter'])->name('admin.editLetter');
+    Route::put('/admin/store3{id}', [HomeController::class, 'store3'])->name('admin.letters.store3');
+    Route::get('/admin/editbalasan{id}', [OutgoingController::class, 'editbalasan'])->name('admin.editbalasan');
+    Route::put('/admin/kirimEditbalasan{id}', [OutgoingController::class, 'kirimEditbalasan'])->name('admin.kirimEditbalasan');
+
     Route::get('/admin/streamOutgoingPDF{id}', [OutgoingController::class, 'streamOutgoingPDF'])->name('admin.filebalasan.streamOutgoingPDF');
 
 });
@@ -77,6 +84,7 @@ Route::middleware(['auth', 'user-access:kakan'])->group(function () {
     Route::get('/kakan/detailsurat{id}', [HomeController::class, 'detailSurat'])->name('kakan.letters.detailSurat');
     Route::post('/kakan/store2', [HomeController::class, 'store2'])->name('kakan.letters.store2');
 });
+
 Route::middleware(['auth', 'user-access:tatausaha'])->group(function () {
    
     Route::get('/tatausaha/dashboard', [HomeController::class, 'tatausahaDashboard'])->name('tatausaha.dashboard');
@@ -90,6 +98,13 @@ Route::middleware(['auth', 'user-access:tatausaha'])->group(function () {
     Route::get('/tatausaha/daftarbalasan{id}', [OutgoingController::class, 'daftarbalasan'])->name('tatausaha.daftarbalasan');
     Route::get('/tatausaha/streamPDF/{id}', [HomeController::class, 'streamPDF'])->name('tatausaha.file.streamPDF');
     Route::get('/tatausaha/detailsurat{id}', [HomeController::class, 'detailSurat'])->name('tatausaha.letters.detailSurat');
+
+    
+    Route::get('/tatausaha/deleteLetter{id}', [HomeController::class, 'deleteLetter'])->name('tatausaha.deleteLetter');
+    Route::get('/tatausaha/deleteOutgoingLetter{id}', [OutgoingController::class, 'deleteOutgoingLetter'])->name('tatausaha.deleteOutgoingLetter');
+    Route::get('/tatausaha/editbalasan{id}', [OutgoingController::class, 'editbalasan'])->name('tatausaha.editbalasan');
+    Route::put('/tatausaha/kirimEditbalasan{id}', [OutgoingController::class, 'kirimEditbalasan'])->name('tatausaha.kirimEditbalasan');
+
 });
 Route::middleware(['auth', 'user-access:seksi1'])->group(function () {
    
@@ -104,6 +119,14 @@ Route::middleware(['auth', 'user-access:seksi1'])->group(function () {
     Route::get('/seksi1/streamPDF/{id}', [HomeController::class, 'streamPDF'])->name('seksi1.file.streamPDF');
     Route::get('/seksi1/detailsurat{id}', [HomeController::class, 'detailSurat'])->name('seksi1.letters.detailSurat');
     Route::get('/seksi1/newletterlist', [HomeController::class, 'newletterlist'])->name('seksi1.newletterlist');
+
+    
+    Route::get('/seksi1/deleteLetter{id}', [HomeController::class, 'deleteLetter'])->name('seksi1.deleteLetter');
+    Route::get('/seksi1/deleteOutgoingLetter{id}', [OutgoingController::class, 'deleteOutgoingLetter'])->name('seksi1.deleteOutgoingLetter');
+    
+    Route::get('/seksi1/editbalasan{id}', [OutgoingController::class, 'editbalasan'])->name('seksi1.editbalasan');
+    Route::put('/seksi1/kirimEditbalasan{id}', [OutgoingController::class, 'kirimEditbalasan'])->name('seksi1.kirimEditbalasan');
+
 });
 Route::middleware(['auth', 'user-access:seksi2'])->group(function () {
    
@@ -118,6 +141,15 @@ Route::middleware(['auth', 'user-access:seksi2'])->group(function () {
     Route::get('/seksi2/streamPDF/{id}', [HomeController::class, 'streamPDF'])->name('seksi2.file.streamPDF');
     Route::get('/seksi2/detailsurat{id}', [HomeController::class, 'detailSurat'])->name('seksi2.letters.detailSurat');
     Route::get('/seksi2/newletterlist', [HomeController::class, 'newletterlist'])->name('seksi2.newletterlist');
+    
+
+    
+    Route::get('/seksi2/deleteLetter{id}', [HomeController::class, 'deleteLetter'])->name('seksi2.deleteLetter');
+    Route::get('/seksi2/deleteOutgoingLetter{id}', [OutgoingController::class, 'deleteOutgoingLetter'])->name('seksi2.deleteOutgoingLetter');
+   
+    Route::get('/seksi2/editbalasan{id}', [OutgoingController::class, 'editbalasan'])->name('seksi2.editbalasan');
+    Route::put('/seksi2/kirimEditbalasan{id}', [OutgoingController::class, 'kirimEditbalasan'])->name('seksi2.kirimEditbalasan');
+
 });
 Route::middleware(['auth', 'user-access:seksi3'])->group(function () {
    
@@ -132,6 +164,14 @@ Route::middleware(['auth', 'user-access:seksi3'])->group(function () {
     Route::get('/seksi3/streamPDF/{id}', [HomeController::class, 'streamPDF'])->name('seksi3.file.streamPDF');
     Route::get('/seksi3/detailsurat{id}', [HomeController::class, 'detailSurat'])->name('seksi3.letters.detailSurat');
     Route::get('/seksi3/newletterlist', [HomeController::class, 'newletterlist'])->name('seksi3.newletterlist');
+
+    
+    Route::get('/seksi3/deleteLetter{id}', [HomeController::class, 'deleteLetter'])->name('seksi3.deleteLetter');
+    Route::get('/seksi3/deleteOutgoingLetter{id}', [OutgoingController::class, 'deleteOutgoingLetter'])->name('seksi3.deleteOutgoingLetter');
+   
+    Route::get('/seksi3/editbalasan{id}', [OutgoingController::class, 'editbalasan'])->name('seksi3.editbalasan');
+    Route::put('/seksi3/kirimEditbalasan{id}', [OutgoingController::class, 'kirimEditbalasan'])->name('seksi3.kirimEditbalasan');
+
 });
 Route::middleware(['auth', 'user-access:seksi4'])->group(function () {
    
@@ -146,6 +186,14 @@ Route::middleware(['auth', 'user-access:seksi4'])->group(function () {
     Route::get('/seksi4/streamPDF/{id}', [HomeController::class, 'streamPDF'])->name('seksi4.file.streamPDF');
     Route::get('/seksi4/detailsurat{id}', [HomeController::class, 'detailSurat'])->name('seksi4.letters.detailSurat');
     Route::get('/seksi4/newletterlist', [HomeController::class, 'newletterlist'])->name('seksi4.newletterlist');
+
+    
+    Route::get('/seksi4/deleteLetter{id}', [HomeController::class, 'deleteLetter'])->name('seksi4.deleteLetter');
+    Route::get('/seksi4/deleteOutgoingLetter{id}', [OutgoingController::class, 'deleteOutgoingLetter'])->name('seksi4.deleteOutgoingLetter');
+   
+    Route::get('/seksi4/editbalasan{id}', [OutgoingController::class, 'editbalasan'])->name('seksi4.editbalasan');
+    Route::put('/seksi4/kirimEditbalasan{id}', [OutgoingController::class, 'kirimEditbalasan'])->name('seksi4.kirimEditbalasan');
+
 });
 Route::middleware(['auth', 'user-access:seksi5'])->group(function () {
    
@@ -160,4 +208,12 @@ Route::middleware(['auth', 'user-access:seksi5'])->group(function () {
     Route::get('/seksi5/streamPDF/{id}', [HomeController::class, 'streamPDF'])->name('seksi5.file.streamPDF');
     Route::get('/seksi5/detailsurat{id}', [HomeController::class, 'detailSurat'])->name('seksi5.letters.detailSurat');
     Route::get('/seksi5/newletterlist', [HomeController::class, 'newletterlist'])->name('seksi5.newletterlist');
+
+    
+    Route::get('/seksi5/deleteLetter{id}', [HomeController::class, 'deleteLetter'])->name('seksi5.deleteLetter');
+    Route::get('/seksi5/deleteOutgoingLetter{id}', [OutgoingController::class, 'deleteOutgoingLetter'])->name('seksi5.deleteOutgoingLetter');
+    
+    Route::get('/seksi5/editbalasan{id}', [OutgoingController::class, 'editbalasan'])->name('seksi5.editbalasan');
+    Route::put('/seksi5/kirimEditbalasan{id}', [OutgoingController::class, 'kirimEditbalasan'])->name('seksi5.kirimEditbalasan');
+
 });

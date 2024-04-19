@@ -56,6 +56,8 @@
                     <th>Tanggal Surat Keluar</th>
                     <th>Keterangan</th>
                     <th>File</th>
+                    <th>aksi</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -74,6 +76,14 @@
                             <i class="fa fa-file" style="font-size:24px"></i>
                         </a>                  
                     </td>
+                    <td><a href="{{ route($type.'deleteOutgoingLetter',['id'=>$balasan->id]) }}">
+                        Hapus
+                    </a>
+                    <a href="{{ route($type.'editbalasan',['id'=>$balasan->id]) }}">
+                        Edit
+                    </a>
+                    </td>
+
                 </tr>
                 @endforeach
             </tbody>

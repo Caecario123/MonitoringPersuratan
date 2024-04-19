@@ -354,6 +354,12 @@
                             balas
                             @endif
                             </a>
+                            <a href="{{ route('admin.deleteLetter',['id'=>$letter->id]) }}">
+                            Hapus
+                            </a>
+                            <a href="{{ route('admin.editLetter',['id'=>$letter->id]) }}">
+                            Edit
+                            </a>
                         </td>
                         <td>
                             <a href="{{ route('admin.file.streamPDF', ['id' => $letter->id]) }}">
@@ -426,5 +432,17 @@
 <script src="{{ asset('lte/dist/js/demo.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('lte/dist/js/pages/dashboard.js')}}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function(){
+    // Periksa jika pesan tersedia
+    var message = "{{ session('message') }}";
+    if (message) {
+        // Tampilkan pesan dalam popup
+        alert(message);
+    }
+});
+</script>
+
 </body>
 </html>

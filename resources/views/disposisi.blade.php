@@ -58,6 +58,25 @@
                 @error('disposition_process')
                     <div>{{ $message }}</div>
                 @enderror
+            </div>      
+            <div>
+                @if ($data->disposition_process !="Belum ditindak lanjuti")
+                    
+                <label for="disposition_process2">Tindaklanjut Disposisi 2:</label>
+                <select id="disposition_process 2" name="disposition_process2">
+                    <option value="">pilih opsi</option>
+                    <option value="Tata Usaha">Tata Usaha</option>
+                    <option value="Seksi penetapan hak dan pendaftaran">Seksi penetapan hak dan pendaftaran </option>
+                    <option value="Seksi survei dan pemetaan">Seksi survei dan pemetaan</option>
+                    <option value="Seksi penataan dan pemberdayaan">Seksi penataan dan pemberdayaan</option>
+                    <option value="Seksi pengadaan tanah dan pengembangan">Seksi pengadaan tanah dan pengembangan</option>
+                    <option value="Seksi pengendalian dan penanganan sengketa">Seksi pengendalian dan penanganan sengketa</option>
+                </select>
+                @error('disposition_process2    ')
+                    <div>{{ $message }}</div>
+                @enderror
+                @endif
+
             </div>       
             <div>
                 <button type="submit">Submit</button>
