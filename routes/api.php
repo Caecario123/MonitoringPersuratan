@@ -23,20 +23,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/addletters', [LetterController::class, 'store']);
-Route::post('/updateletters/{id}', [LetterController::class, 'update']);
-Route::delete('/deleteletters/{id}', [LetterController::class, 'delete']);
-Route::put('/dispositionletters/{id}', [LetterController::class, 'disposisikan']);
-
-Route::delete('/deleteOutgoingLetters/{id}', [OutgoingController::class, 'delete']);
-Route::post('/addOutgoingLetters/{id}', [OutgoingController::class, 'store']);
-Route::post('/updateOutgoingLetters/{id}', [OutgoingController::class, 'update']);
-
+Route::get('/letters', [LetterController::class, 'store']);
 
 Route::get('users', [UserController::class, 'index']);
 Route::get('users/{id}', [UserController::class, 'show']);
 Route::put('users/{id}', [UserController::class, 'update']);
 Route::delete('users/{id}', [UserController::class, 'delete']);
-Route::post('/storeusers', [UserController::class, 'storeUser']);
-
-Route::get('/dashboard', [HomeController::class, 'adminDashboard']);

@@ -95,40 +95,4 @@ class UserController extends Controller
 
         return response()->json(['message' => 'User deleted successfully'], 200);
     }
-
-/**
-     * Simpan pengguna baru.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function storeUser(Request $request)
-    {
-        // Validasi data masukan
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'nama'  => 'required',
-            'password'  => 'required',
-            'type' => 'required|in:0,1,2,3,4,5,6,7',
-        ]);
-
-        // Jika validasi gagal, kembalikan respon error
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        // Buat data pengguna baru
-        $user = new User();
-        $user->email = $request->email;
-        $user->name = $request->nama;
-        $user->password = Hash::make($request->password);
-        $user->type = $request->type;
-
-        // Simpan pengguna baru ke database
-        $user->save();
-
-        // Kembalikan respon sukses
-        return response()->json(['message' => 'User created successfully'], 201);
-    }
-
 }

@@ -27,38 +27,20 @@ class HomeController extends Controller
     }
     public function adminDashboard()
     {
-        try {
-            $users = User::all(); // Mengambil semua data pengguna
-            $letters = Letters::all(); // Mengambil semua data surat
-            $files = File::all(); // Mengambil semua data file
+        $user = User::all(); // Menggunakan model Letter untuk mengambil data
 
-            // Menggabungkan data surat dan data file menjadi satu koleksi
-            $datas = $letters->merge($files);
+        $data = Letters::all(); // Assuming you're fetching data for a welcome page
+        $data2 = File::all(); // Assuming you're fetching data for a welcome page
 
-            // Mengembalikan koleksi data dalam format JSON
-            return response()->json(['success' => true, 'users' => $users, 'datas' => $datas], 200);
-        } catch (\Exception $e) {
-            // Mengembalikan pesan kesalahan jika terjadi kesalahan dalam pengambilan data
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-
-    // public function adminDashboards()
-    // {
-    //     $user = User::all(); // Menggunakan model Letter untuk mengambil data
-
-    //     $data = Letters::all(); // Assuming you're fetching data for a welcome page
-    //     $data2 = File::all(); // Assuming you're fetching data for a welcome page
-
-    //     $datas = $data2->merge($data);
+        $datas = $data2->merge($data);
 
         
-    //     return view('adminDashboard', compact('datas'));
-    // }
-    // public function kakanDashboard()
-    // {
-    //     return view('kakanDashboard');
-    // }
+        return view('adminDashboard', compact('datas'));
+    }
+    public function kakanDashboard()
+    {
+        return view('kakanDashboard');
+    }
     public function tatausahaDashboard()
     {
         $user = User::all();
