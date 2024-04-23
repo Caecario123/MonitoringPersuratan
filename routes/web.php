@@ -19,7 +19,7 @@ use App\Http\Controllers\OutgoingController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-Route::get('/login',[LoginController::class,'index'])->name('login');
+Route::get('/',[LoginController::class,'index'])->name('login');
 Route::post('/login-proses',[LoginController::class,'login_proses'])->name('login-proses');
 Route::get('/logout',[LoginController::class,'logout'])->name('logout');
 
