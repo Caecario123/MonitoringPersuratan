@@ -3,9 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LetterController;
+use App\Http\Controllers\API\SuratController;
+
 use App\Http\Controllers\API\UserController;
-use App\Http\Controllers\OutgoingController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\API\OutgoingController;
+use App\Http\Controllers\API\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,3 +31,15 @@ Route::get('users', [UserController::class, 'index']);
 Route::get('users/{id}', [UserController::class, 'show']);
 Route::put('users/{id}', [UserController::class, 'update']);
 Route::delete('users/{id}', [UserController::class, 'delete']);
+Route::post('/storeusers', [UserController::class, 'storeUser']);
+
+Route::post('/addletters', [SuratController::class, 'store']);
+Route::post('/updateletters/{id}', [LetterController::class, 'update']);
+Route::delete('/deleteletters/{id}', [LetterController::class, 'delete']);
+Route::put('/dispositionletters/{id}', [LetterController::class, 'disposisikan']);
+
+Route::delete('/deleteOutgoingLetters/{id}', [OutgoingController::class, 'delete']);
+Route::post('/addOutgoingLetters/{id}', [OutgoingController::class, 'store']);
+Route::post('/updateOutgoingLetters/{id}', [OutgoingController::class, 'update']);
+
+Route::post('/addOutgoingLetters/{id}', [OutgoingController::class, 'store']);
