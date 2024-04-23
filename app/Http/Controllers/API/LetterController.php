@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
-class SuratController extends Controller
+class LetterController extends Controller
 {
     public function store(Request $request)
     {
