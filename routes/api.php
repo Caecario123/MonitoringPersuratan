@@ -30,6 +30,7 @@ Route::get('users', [UserController::class, 'index']);
 Route::get('users/{id}', [UserController::class, 'show']);
 Route::put('users/{id}', [UserController::class, 'update']);
 Route::delete('users/{id}', [UserController::class, 'delete']);
+Route::post('login', [UserController::class, 'login']);
 Route::post('/storeusers', [UserController::class, 'storeUser']);
 
 Route::post('/addletters', [LetterController::class, 'store']);
