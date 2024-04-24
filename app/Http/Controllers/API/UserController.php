@@ -24,30 +24,43 @@ class UserController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
+{
+    $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken('MyApp')->plainTextToken;
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
+        $token = $user->createToken('MyApp')->plainTextToken;
 
-            return response()->json(['token' => $token], 200);
-        }
-
-        throw ValidationException::withMessages([
-            'email' => ['The provided credentials are incorrect.'],
-        ]);
+        return response()->json([
+            'status' => true,
+            'statusCode' => 200,
+            'message' => 'Login successful',
+            'token' => $token
+        ], 200);
     }
+
+    return response()->json([
+        'status' => false,
+        'statusCode' => 401,
+        'message' => 'Login failed. The provided credentials are incorrect.'
+    ], 401);
+}
+
     /**
      * Menampilkan daftar semua pengguna.
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index()
-    {
-        $users = User::all();
-        return response()->json(['data' => $users], 200);
-    }
+{
+    $users = User::all();
+    return response()->json([
+        'status' => true,
+        'statusCode' => 200,
+        'message' => 'Success get all users',
+        'data' => $users
+    ], 200);
+}
 
     /**
      * Menampilkan detail pengguna berdasarkan ID.
@@ -59,9 +72,9 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return response()->json(['status' => false, 'statusCode' => 404, 'message' => 'User not found'], 404);
         }
-        return response()->json(['data' => $user], 200);
+        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Success get data user', 'data' => $user], 200);
     }
 
     /**
@@ -72,38 +85,53 @@ class UserController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
-    {
-        $user = User::find($id);
-        if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
-        }
-
-        $validator = validator::make($request->all(), [
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('users')->ignore($user->id),
-            ],
-            'nama' => 'required',
-            'password' => 'nullable',
-            'type' => 'nullable|in:0,1,2,3,4,5,6,7',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 422);
-        }
-
-        $user->email = $request->email;
-        $user->name = $request->nama;
-        if ($request->has('password')) {
-            $user->password = Hash::make($request->password);
-        }
-        if ($request->has('type')) {
-            $user->type = $request->type;
-        }
-        $user->save();
-
-        return response()->json(['message' => 'User updated successfully'], 200);
+{
+    $user = User::find($id);
+    if (!$user) {
+        return response()->json([
+            'status' => false,
+            'statusCode' => 404,
+            'message' => 'User not found'
+        ], 404);
     }
+
+    $validator = Validator::make($request->all(), [
+        'email' => [
+            'required',
+            'email',
+            Rule::unique('users')->ignore($user->id),
+        ],
+        'nama' => 'required',
+        'password' => 'nullable',
+        'type' => 'nullable|in:0,1,2,3,4,5,6,7',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'statusCode' => 422,
+            'message' => 'Validation error',
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    $user->email = $request->email;
+    $user->name = $request->nama;
+    if ($request->has('password')) {
+        $user->password = Hash::make($request->password);
+    }
+    if ($request->has('type')) {
+        $user->type = $request->type;
+    }
+    $user->save();
+
+    return response()->json([
+        'status' => true,
+        'statusCode' => 200,
+        'message' => 'User updated successfully'
+    ], 200);
+}
+
 
     /**
      * Menghapus pengguna berdasarkan ID.
@@ -112,15 +140,23 @@ class UserController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function delete($id)
-    {
-        $user = User::find($id);
-        if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
-        }
-        $user->delete();
-
-        return response()->json(['message' => 'User deleted successfully'], 200);
+{
+    $user = User::find($id);
+    if (!$user) {
+        return response()->json([
+            'status' => false,
+            'statusCode' => 404,
+            'message' => 'User not found'
+        ], 404);
     }
+    $user->delete();
+
+    return response()->json([
+        'status' => true,
+        'statusCode' => 200,
+        'message' => 'User deleted successfully'
+    ], 200);
+}
     /**
      * Simpan pengguna baru.
      *
@@ -128,32 +164,39 @@ class UserController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function storeUser(Request $request)
-    {
-        // Validasi data masukan
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'nama'  => 'required',
-            'password'  => 'required',
-            'type' => 'required|in:0,1,2,3,4,5,6,7',
-        ]);
+{
+    // Validasi data masukan
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email',
+        'nama'  => 'required',
+        'password'  => 'required',
+        'type' => 'required|in:0,1,2,3,4,5,6,7',
+    ]);
 
-        // Jika validasi gagal, kembalikan respon error
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        // Buat data pengguna baru
-        $user = new User();
-        $user->email = $request->email;
-        $user->name = $request->nama;
-        $user->password = Hash::make($request->password);
-        $user->type = $request->type;
-
-        // Simpan pengguna baru ke database
-        $user->save();
-
-        // Kembalikan respon sukses
-        return response()->json(['message' => 'User created successfully'], 201);
+    // Jika validasi gagal, kembalikan respon error
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'statusCode' => 422,
+            'errors' => $validator->errors()
+        ], 422);
     }
 
+    // Buat data pengguna baru
+    $user = new User();
+    $user->email = $request->email;
+    $user->name = $request->nama;
+    $user->password = Hash::make($request->password);
+    $user->type = $request->type;
+
+    // Simpan pengguna baru ke database
+    $user->save();
+
+    // Kembalikan respon sukses
+    return response()->json([
+        'status' => true,
+        'statusCode' => 201,
+        'message' => 'User created successfully'
+    ], 201);
+}
 }
