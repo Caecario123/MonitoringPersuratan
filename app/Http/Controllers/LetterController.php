@@ -236,7 +236,10 @@ class LetterController extends Controller
             'status' => 'success', 
             'statusCode' => 200,
             'message' => 'Data retrieved successfully',
-            'data' => $datas
+            'data' => [
+                'letter' => $letters,
+                'file' => $fileData
+            ]
         ], 200);
     } catch (\Exception $e) {
         // Mengembalikan pesan kesalahan jika terjadi kesalahan dalam pengambilan data
