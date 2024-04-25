@@ -229,7 +229,7 @@ class LetterController extends Controller
         $files = File::all(); // Mengambil semua data file
 
         // Menggabungkan data surat dan data file menjadi satu koleksi
-        // $datas = $letters->merge($files);
+        $datas = $letters->merge($files);
         
         // Mengembalikan koleksi data dalam format JSON dengan status 200 (OK)
         return response()->json([
