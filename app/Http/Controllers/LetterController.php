@@ -238,7 +238,7 @@ class LetterController extends Controller
             'message' => 'Data retrieved successfully',
             'data' => [
                 'letter' => $letters,
-                'file' => $fileData
+                'file' => $files
             ]
         ], 200);
     } catch (\Exception $e) {
