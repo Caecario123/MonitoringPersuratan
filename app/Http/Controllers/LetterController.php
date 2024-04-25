@@ -51,10 +51,23 @@ class LetterController extends Controller
 
             File::create($fileData);
 
-            return response()->json(['message' => 'Letter created successfully', 'letter' => $letter, 'file' => $fileData], 201);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to create letter', 'error' => $e->getMessage()], 500);
-        }
+            return response()->json([
+                'message' => 'Letter created successfully',
+                'status' => true,
+                'statusCode' => 201,
+                'data' => [
+                    'letter' => $letter,
+                    'file' => $fileData
+                ]
+            ], 201);
+            
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'message' => 'Failed to create letter',
+                        'status' => false,
+                        'statusCode' => 500,
+                        'error' => $e->getMessage()
+                    ], 500);}
     }
     public function update(Request $request, $id)
     {
@@ -97,46 +110,68 @@ class LetterController extends Controller
             ];
             File::updateOrCreate(['letter_id' => $id], $fileData);
 
-            return response()->json(['message' => 'Letter updated successfully', 'letter' => Letters::find($id), 'file' => $fileData], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to update letter', 'error' => $e->getMessage()], 500);
-        }
+                // Jika surat berhasil diperbarui
+                return response()->json([
+                    'message' => 'Letter updated successfully',
+                    'status' => true,
+                    'statusCode' => 200,
+                    'data' => [
+                        'letter' => Letters::find($id),
+                        'file' => $fileData
+                    ]
+                ], 200);
+            } catch (\Exception $e) {
+                // Jika terjadi kesalahan saat memperbarui surat
+                return response()->json([
+                    'message' => 'Failed to update letter',
+                    'status' => false,
+                    'statusCode' => 500,
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+            
     }
     public function delete($id)
-    {
+        {
         // Mencari surat dengan ID yang diberikan
         $letter = Letters::find($id);
 
         // Memeriksa apakah surat tersebut ditemukan
         if (!$letter) {
-            return response()->json(['message' => 'Surat tidak ditemukan.'], 404);
+            return response()->json(['message' => 'Surat tidak ditemukan.', 'status' => false, 'statusCode' => 404], 404);
         }
 
-        // Mencari dan menghapus file terkait dengan surat
-        $files = File::where('letter_id', $id)->get();
-        if ($files->isNotEmpty()) {
-            foreach ($files as $file) {
-                if ($file->path && Storage::disk('public')->exists($file->path)) {
-                    Storage::disk('public')->delete($file->path);
+        try {
+            // Mencari dan menghapus file terkait dengan surat
+            $files = File::where('letter_id', $id)->get();
+            if ($files->isNotEmpty()) {
+                foreach ($files as $file) {
+                    if ($file->path && Storage::disk('public')->exists($file->path)) {
+                        Storage::disk('public')->delete($file->path);
+                    }
+                    $file->delete();
                 }
-                $file->delete();
             }
-        }
 
-        // Mencari dan menghapus outgoing letters terkait dengan surat
-        $outgoingLetters = Outgoingletter::where('letter_id', $id)->get();
-        if ($outgoingLetters->isNotEmpty()) {
-            foreach ($outgoingLetters as $outgoingLetter) {
-                $outgoingLetter->delete();
+            // Mencari dan menghapus outgoing letters terkait dengan surat
+            $outgoingLetters = Outgoingletter::where('letter_id', $id)->get();
+            if ($outgoingLetters->isNotEmpty()) {
+                foreach ($outgoingLetters as $outgoingLetter) {
+                    $outgoingLetter->delete();
+                }
             }
+
+            // Menghapus record surat
+            $letter->delete();
+
+            // Mengirim response sukses
+            return response()->json(['message' => 'Surat berhasil dihapus.', 'status' => true, 'statusCode' => 200], 200);
+        } catch (\Exception $e) {
+            // Jika terjadi kesalahan saat menghapus surat
+            return response()->json(['message' => 'Gagal menghapus surat.', 'error' => $e->getMessage(), 'status' => false, 'statusCode' => 500], 500);
         }
-
-        // Menghapus record surat
-        $letter->delete();
-
-        // Mengirim response sukses
-        return response()->json(['message' => 'Surat berhasil dihapus.'], 200);
     }
+
     public function disposisikan(Request $request, $id)
     {
         // Validasi input
@@ -148,7 +183,12 @@ class LetterController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json([
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors(),
+                'status' => false,
+                'statusCode' => 400
+            ], 400);
         }
 
         // Menggabungkan proses disposisi jika ada input kedua
@@ -168,10 +208,46 @@ class LetterController extends Controller
 
         // Memeriksa apakah update berhasil
         if ($updateStatus) {
-            return response()->json(['message' => 'Disposisi berhasil diperbarui'], 200);
+            return response()->json([
+                'message' => 'Disposisi berhasil diperbarui',
+                'status' => true,
+                'statusCode' => 200
+            ], 200);
         } else {
-            return response()->json(['message' => 'Gagal memperbarui disposisi, surat tidak ditemukan'], 404);
+            return response()->json([
+                'message' => 'Gagal memperbarui disposisi, surat tidak ditemukan',
+                'status' => false,
+                'statusCode' => 404
+            ], 404);
         }
     }
+
+    public function show()
+{
+    try {
+        $letters = Letters::all(); // Mengambil semua data surat
+        $files = File::all(); // Mengambil semua data file
+
+        // Menggabungkan data surat dan data file menjadi satu koleksi
+        $datas = $letters->merge($files);
+        
+        // Mengembalikan koleksi data dalam format JSON dengan status 200 (OK)
+        return response()->json([
+            'status' => 'success', 
+            'statusCode' => 200,
+            'message' => 'Data retrieved successfully',
+            'data' => $datas
+        ], 200);
+    } catch (\Exception $e) {
+        // Mengembalikan pesan kesalahan jika terjadi kesalahan dalam pengambilan data
+        return response()->json([
+            'status' => 'error',
+            'statusCode' => 500,
+            'message' => 'Internal Server Error',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
 
 }

@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Storage;
 class HomeController extends Controller
 {
     public function dashboard(){
-        $user = User::all(); // Menggunakan model Letter untuk mengambil data
 
         $data = Letters::all(); // Assuming you're fetching data for a welcome page
         $data2 = File::all(); // Assuming you're fetching data for a welcome page
