@@ -25,6 +25,20 @@ class UserController extends Controller
      */
     public function login(Request $request)
 {
+    // Validasi bahwa email dan password harus diisi
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'statusCode' => 400,
+            'message' => 'Email and password wajib diisi.'
+        ], 400);
+    }
+
     $credentials = $request->only('email', 'password');
 
     if (Auth::attempt($credentials)) {
@@ -34,7 +48,7 @@ class UserController extends Controller
         return response()->json([
             'status' => true,
             'statusCode' => 200,
-            'message' => 'Login successful',
+            'message' => 'Login berhasil',
             'token' => $token
         ], 200);
     }
@@ -42,9 +56,10 @@ class UserController extends Controller
     return response()->json([
         'status' => false,
         'statusCode' => 401,
-        'message' => 'Login failed. The provided credentials are incorrect.'
+        'message' => 'Email atau password salah'
     ], 401);
 }
+
 
     /**
      * Menampilkan daftar semua pengguna.
