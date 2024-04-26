@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Letters;
-use App\Models\Outgoingletter;
+use App\Models\OutgoingLetter;
 use App\Models\Filebalas;
 
 use App\Models\User;
@@ -47,7 +47,7 @@ class OutgoingController extends Controller
         // Simpan juga informasi file ke tabel file
         if ($request->file('file')) {
             // Store the data into the database
-            $letter = Outgoingletter::whereId($id)->first();
+            $letter = OutgoingLetter::whereId($id)->first();
             if (!$letter) {
                 return response()->json(['status' => false, 'statusCode' => 404, 'error' => 'Letter not found.'], 404);
             }
@@ -71,7 +71,7 @@ class OutgoingController extends Controller
             Filebalas::where('letter_balas_id', $id)->update($fileData);
 
             // Update outgoing letter data
-            Outgoingletter::whereId($id)->update($data);
+            OutgoingLetter::whereId($id)->update($data);
         } else {
             return response()->json(['status' => false, 'statusCode' => 400, 'error' => 'No PDF uploaded.'], 400);
         }
@@ -110,7 +110,7 @@ class OutgoingController extends Controller
     
             if ($request->file('file')) {
                 // Simpan data ke dalam tabel outgoingletter
-                $letter = Outgoingletter::create($data);
+                $letter = OutgoingLetter::create($data);
                 $pdfName = time() . '_' . $request->file('file')->getClientOriginalName();
                 // Simpan file PDF di penyimpanan 'pdfs' dalam penyimpanan 'public'
                 $pdfPath = $request->file('file')->storeAs('Keluar', $pdfName, 'public');
@@ -136,9 +136,9 @@ class OutgoingController extends Controller
     {  
         try {
             if ($id === null) {
-                $outgoingLetters = Outgoingletter::all();
+                $outgoingLetters = OutgoingLetter::all();
             } else {
-                $outgoingLetters = Outgoingletter::where('letter_id', $id)->get();
+                $outgoingLetters = OutgoingLetter::where('letter_id', $id)->get();
             }
             return response()->json([
                 'status' => true,
@@ -175,7 +175,7 @@ class OutgoingController extends Controller
     {
     try {
         // Mencari surat dengan ID yang diberikan
-        $outgoingLetter = Outgoingletter::find($id);
+        $outgoingLetter = OutgoingLetter::find($id);
 
         // Memeriksa apakah surat tersebut ditemukan
         if ($outgoingLetter) {
