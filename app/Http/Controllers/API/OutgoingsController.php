@@ -10,7 +10,7 @@ use App\Models\Filebalas;
 use App\Models\User;
 use File as files;
 
-class OutgoingController extends Controller
+class OutgoingsController extends Controller
 {
     public function balasan(Request $request,$id){
         $data = Letters::find($id);
