@@ -34,8 +34,8 @@ Route::post('login', [UserController::class, 'login']);
 Route::post('/users', [UserController::class, 'storeUser']);
 
 Route::post('/addletters', [LetterController::class, 'store']);
-Route::post('/updateletters/{id}', [LetterController::class, 'update']);
-Route::delete('/deleteletters/{id}', [LetterController::class, 'delete']);
+Route::post('/updateletter/{id}', [LetterController::class, 'update']);
+Route::delete('/deleteletter/{id}', [LetterController::class, 'delete']);
 Route::get('/showletters', [LetterController::class, 'show']);
 
 Route::put('/dispositionletters/{id}', [LetterController::class, 'disposisikan']);
