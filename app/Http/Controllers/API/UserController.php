@@ -30,7 +30,6 @@ class UserController extends Controller
         'email' => 'required|email',
         'password' => 'required',
     ]);
-
     if ($validator->fails()) {
         return response()->json([
             'status' => false,

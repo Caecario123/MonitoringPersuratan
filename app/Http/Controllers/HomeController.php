@@ -30,9 +30,8 @@ class HomeController extends Controller
 
         $data = Letters::all(); // Assuming you're fetching data for a welcome page
         $data2 = File::all(); // Assuming you're fetching data for a welcome page
-
+        
         $datas = $data2->merge($data);
-
         
         return view('adminDashboard', compact('datas'));
     }
@@ -351,46 +350,42 @@ class HomeController extends Controller
     public function deleteLetter($id)
     {
         // Mencari surat dengan ID yang diberikan
-        $letter = Letters::find($id);
-        $outgoingLetter = Outgoingletter::where('letter_id', $id)->get(); // Jika Anda mengharapkan satu hasil
-        $files = File::where('letter_id', $id)->get();
-        $filePath = File::where('letter_id', $id)->first()->path;
-        $id_balas = Outgoingletter::where('letter_id', $id)->get()->pluck('id'); // Mengambil hanya ID
-        $filebalas = Filebalas::where('letter_balas_id', $id_balas)->get();
+                $letter = Letters::find($id);
+
         // Memeriksa apakah surat tersebut ditemukan
-        if ($letter) {
-            // Menghapus surat
-            if($filebalas){
-                foreach ($filebalas as $fb) {
-                    $filePath2 = $fb->path;
-                    $pdfPath2 = 'app/public/' . $filePath2;
-                    unlink(storage_path($pdfPath2));
+        if (!$letter) {
+            return response()->json(['message' => 'Surat tidak ditemukan.', 'status' => false, 'statusCode' => 404], 404);
+        }
 
-                    $fb->delete();
-                }
-            }
-            if($files){
+        try {
+            // Mencari dan menghapus file terkait dengan surat
+            $files = File::where('letter_id', $id)->get();
+            if ($files->isNotEmpty()) {
                 foreach ($files as $file) {
-                    $pdfPath = 'app/public/' . $filePath;
-                    unlink(storage_path($pdfPath));
-
+                    if ($file->path && Storage::disk('public')->exists($file->path)) {
+                        Storage::disk('public')->delete($file->path);
+                    }
                     $file->delete();
-                    $letter->delete();
                 }
             }
-            if($outgoingLetter)
-            {
-                foreach ($outgoingLetter as $ol) {
-                    $ol->delete();
+
+            // Mencari dan menghapus outgoing letters terkait dengan surat
+            $outgoingLetters = Outgoingletter::where('letter_id', $id)->get();
+            if ($outgoingLetters->isNotEmpty()) {
+                foreach ($outgoingLetters as $outgoingLetter) {
+                    $outgoingLetter->delete();
                 }
             }
+
+            // Menghapus record surat
+            $letter->delete();
             
             
             // Mengirim response sukses
             $user = auth()->user()->type;
             $type = $user.".";
             return redirect()->route($type.'dashboard')->with('message', 'Surat berhasil dihapus.');
-        } else {
+        } catch(\Exception $e) {
             // Jika surat tidak ditemukan, kirim response error
             return response()->json(['message' => 'Letter not found'], 404);
         }

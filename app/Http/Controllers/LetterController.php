@@ -255,6 +255,165 @@ class LetterController extends Controller
         ], 500);
     }
 }
+    public function showtu()
+    {
+        try {
 
+        $letters = Letters::where('disposition_process', 'like', '%Tata Usaha%')->get(); // Mengambil semua data surat
+        $files = File::all(); // Mengambil semua data file
 
+        // Menggabungkan data surat dan data file menjadi satu koleksi
+        $datas = $letters->merge($files);
+        // $datas = Letters::where('disposition_process', 'Tata Usaha')->get();
+// Mengembalikan koleksi data dalam format JSON dengan status 200 (OK)
+        return response()->json([
+            'status' => 'success', 
+            'statusCode' => 200,
+            'message' => 'Data retrieved successfully',
+            'data' => [
+                'letter' => $letters,
+                'file' => $files
+            ]
+        ], 200);
+        } catch (\Exception $e) {
+        // Mengembalikan pesan kesalahan jika terjadi kesalahan dalam pengambilan data
+        return response()->json([
+            'status' => 'error',
+            'statusCode' => 500,
+            'message' => 'Internal Server Error',
+            'error' => $e->getMessage()
+        ], 500);    
+        }
+        }
+    public function showseksi1()
+    {   try{
+        $letters = Letters::where('disposition_process', 'like', '%Seksi penetapan hak dan pendaftaran%')->get();
+        $files = File::all(); // Mengambil semua data file
+
+        // Menggabungkan data surat dan data file menjadi satu koleksi
+        $datas = $letters->merge($files);
+        // $datas = Letters::where('disposition_process', 'Seksi penetapan hak dan pendaftaran')->get();
+// Mengembalikan koleksi data dalam format JSON dengan status 200 (OK)
+        return response()->json([
+            'status' => 'success', 
+            'statusCode' => 200,
+            'message' => 'Data retrieved successfully',
+            'data' => [
+                'letter' => $letters,
+                'file' => $files
+            ]
+        ], 200);
+        } catch (\Exception $e) {
+        // Mengembalikan pesan kesalahan jika terjadi kesalahan dalam pengambilan data
+        return response()->json([
+            'status' => 'error',
+            'statusCode' => 500,
+            'message' => 'Internal Server Error',
+            'error' => $e->getMessage()
+        ], 500);    }
+    }
+    public function showseksi2()
+    {   try{
+        $letters = Letters::where('disposition_process', 'like', '%Seksi survei dan pemetaan%')->get();
+        $files = File::all(); // Mengambil semua data file
+
+        // Menggabungkan data surat dan data file menjadi satu koleksi
+        $datas = $letters->merge($files);
+        // $datas = Letters::where('disposition_process', 'Seksi survei dan pemetaan')->get();
+        // Mengembalikan koleksi data dalam format JSON dengan status 200 (OK)
+        return response()->json([
+            'status' => 'success', 
+            'statusCode' => 200,
+            'message' => 'Data retrieved successfully',
+            'data' => [
+                'letter' => $letters,
+                'file' => $files
+            ]
+        ], 200);
+        } catch (\Exception $e) {
+        // Mengembalikan pesan kesalahan jika terjadi kesalahan dalam pengambilan data
+        return response()->json([
+            'status' => 'error',
+            'statusCode' => 500,
+            'message' => 'Internal Server Error',
+            'error' => $e->getMessage()
+        ], 500);}    }
+    public function showseksi3()
+    {   try{
+        $letters = Letters::where('disposition_process', 'like', '%Seksi penataan dan pemberdayaan%')->get();
+        $files = File::all(); // Mengambil semua data file
+
+        // Menggabungkan data surat dan data file menjadi satu koleksi
+        $datas = $letters->merge($files);
+        // $datas = Letters::where('disposition_process', 'Seksi penataan dan pemberdayaan')->get();
+        // Mengembalikan koleksi data dalam format JSON dengan status 200 (OK)
+        return response()->json([
+            'status' => 'success', 
+            'statusCode' => 200,
+            'message' => 'Data retrieved successfully',
+            'data' => [
+                'letter' => $letters,
+                'file' => $files
+            ]
+        ], 200);
+        } catch (\Exception $e) {
+        // Mengembalikan pesan kesalahan jika terjadi kesalahan dalam pengambilan data
+        return response()->json([
+            'status' => 'error',
+            'statusCode' => 500,
+            'message' => 'Internal Server Error',
+            'error' => $e->getMessage()
+        ], 500);}    }
+    public function showseksi4()
+    {   try{
+        $letters = Letters::where('disposition_process', 'like', '%Seksi pengadaan tanah dan pengembangan%')->get();
+        $files = File::all(); // Mengambil semua data file
+
+        // Menggabungkan data surat dan data file menjadi satu koleksi
+        $datas = $letters->merge($files);
+        // $datas = Letters::where('disposition_process', 'like', '%Seksi pengadaan tanah dan pengembangan%')->get();
+        // Mengembalikan koleksi data dalam format JSON dengan status 200 (OK)
+        return response()->json([
+            'status' => 'success', 
+            'statusCode' => 200,
+            'message' => 'Data retrieved successfully',
+            'data' => [
+                'letter' => $letters,
+                'file' => $files
+            ]
+        ], 200);
+        } catch (\Exception $e) {
+        // Mengembalikan pesan kesalahan jika terjadi kesalahan dalam pengambilan data
+        return response()->json([
+            'status' => 'error',
+            'statusCode' => 500,
+            'message' => 'Internal Server Error',
+            'error' => $e->getMessage()
+        ], 500);    }}
+    public function showseksi5()
+    {   try{
+        $letters = Letters::where('disposition_process', 'like', '%Seksi pengendalian dan penanganan sengketa%')->get();
+        $files = File::all(); // Mengambil semua data file
+
+        // Menggabungkan data surat dan data file menjadi satu koleksi
+        $datas = $letters->merge($files);
+        // $datas = Letters::where('disposition_process', 'Seksi pengendalian dan penanganan sengketa')->get();
+        // Mengembalikan koleksi data dalam format JSON dengan status 200 (OK)
+        return response()->json([
+            'status' => 'success', 
+            'statusCode' => 200,
+            'message' => 'Data retrieved successfully',
+            'data' => [
+                'letter' => $letters,
+                'file' => $files
+            ]
+        ], 200);
+        } catch (\Exception $e) {
+        // Mengembalikan pesan kesalahan jika terjadi kesalahan dalam pengambilan data
+        return response()->json([
+            'status' => 'error',
+            'statusCode' => 500,
+            'message' => 'Internal Server Error',
+            'error' => $e->getMessage()
+        ], 500);    }}
 }
