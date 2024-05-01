@@ -45,12 +45,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Route::middleware('auth:sanctum')->get('/showletters', [LetterController::class, 'show']);
 
     // Route::get('/showletters', [LetterController::class, 'show']);
-    Route::get('/showletterstu', [LetterController::class, 'showtu']);
-    Route::get('/showletters1', [LetterController::class, 'showseksi1']);
-    Route::get('/showletters2', [LetterController::class, 'showseksi2']);
-    Route::get('/showletters3', [LetterController::class, 'showseksi3']);
-    Route::get('/showletters4', [LetterController::class, 'showseksi4']);
-    Route::get('/showletters5', [LetterController::class, 'showseksi5']);
+    Route::get('/showletterstu', [LetterController::class, 'showtu'])->middleware('user-access:tatausaha');
+    Route::get('/showletters1', [LetterController::class, 'showseksi1'])->middleware('user-access:seksi1');
+    Route::get('/showletters2', [LetterController::class, 'showseksi2'])->middleware('user-access:seksi2');
+    Route::get('/showletters3', [LetterController::class, 'showseksi3'])->middleware('user-access:seksi3');
+    Route::get('/showletters4', [LetterController::class, 'showseksi4'])->middleware('user-access:seksi4');
+    Route::get('/showletters5', [LetterController::class, 'showseksi5'])->middleware('user-access:seksi5');
 
     Route::put('/dispositionletters/{id}', [LetterController::class, 'disposisikan']);
 
