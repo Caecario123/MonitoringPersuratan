@@ -133,27 +133,42 @@ class OutgoingController extends Controller
     
 
     public function daftarbalasan($id = null)
-    {  
-        try {
-            if ($id === null) {
-                $outgoingLetters = OutgoingLetter::all();
-            } else {
-                $outgoingLetters = OutgoingLetter::where('letter_id', $id)->get();
+{  
+    try {
+        if ($id === null) {
+            $outgoingLetters = OutgoingLetter::all();
+            if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data
+                return response()->json([
+                    'status' => false,
+                    'statusCode' => 404,
+                    'message' => 'No outgoing letters found'
+                ], 404);
             }
-            return response()->json([
-                'status' => true,
-                'statusCode' => 200,
-                'data' => $outgoingLetters,
-                'message' => 'Data Outgoing Letters retrieved successfully'
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'statusCode' => 500,
-                'error' => $e->getMessage()
-            ], 500);
+        } else {
+            $outgoingLetters = OutgoingLetter::where('letter_id', $id)->get();
+            if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data untuk ID tertentu
+                return response()->json([
+                    'status' => false,
+                    'statusCode' => 404,
+                    'message' => 'No outgoing letters found for provided ID'
+                ], 404);
+            }
         }
+        return response()->json([
+            'status' => true,
+            'statusCode' => 200,
+            'data' => $outgoingLetters,
+            'message' => 'Data Outgoing Letters retrieved successfully'
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'statusCode' => 500,
+            'message' => 'Internal Server Error',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
 
 
     public function streamOutgoingPDF($id)
