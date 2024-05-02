@@ -194,11 +194,12 @@ class OutgoingController extends Controller
                         unlink($fullPath); // Menghapus file jika ada
                         $fb->delete(); // Menghapus referensi dari database
                     } else {
-                        echo "File tidak ditemukan: " . $fullPath;
+                        Log::warning('File not found: ' . $fullPath);
                         // Anda bisa menambahkan kode lain di sini untuk menangani kasus ketika file tidak ditemukan
                     }
                 }
             }
+            
 
             // Menghapus surat
             $outgoingLetter->delete();
