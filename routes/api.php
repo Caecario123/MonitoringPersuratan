@@ -57,6 +57,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/deleteOutgoingLetters/{id}', [OutgoingController::class, 'delete']);
     Route::post('/addOutgoingLetters/{id}', [OutgoingController::class, 'store']);
     Route::post('/updateOutgoingLetters/{id}', [OutgoingController::class, 'update']);
-    Route::get('/showOutgoingLetters', [LetterController::class, 'show']);
+    Route::get('/showOutgoingLetters', [OutgoingController::class,  'daftarbalasan']);
 });
 
