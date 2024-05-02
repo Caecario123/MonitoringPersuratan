@@ -82,14 +82,13 @@ class OutgoingController extends Controller
     }
     }
 
-    public function store(Request $request)
+    public function store(Request $request,$id)
     {
         try {
             // Validasi permintaan
             $validator = $request->validate([
                 'reference_number2' => 'required|string',
                 'outgoing_letter_date' => 'required|date',
-                'letter_id' => 'nullable|string',
                 'note' => 'nullable|string',
                 'user_id' => 'nullable|string',
                 'status' => 'nullable|string',
@@ -101,7 +100,7 @@ class OutgoingController extends Controller
     
             // Simpan status dari data untuk pembaruan tabel Letters
             $status = $data['status'];
-            $letterid = $data['letter_id'];
+            $letterid = $id;
             $data['user_id'] = $data['user_id']; // $request->input('user_id', auth()->user()->id);
     
             Letters::whereId($letterid)->update(['status' => $status]);
