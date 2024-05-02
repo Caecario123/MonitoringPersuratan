@@ -185,8 +185,18 @@ class OutgoingController extends Controller
                 foreach ($filebalas as $fb) {
                     $filePath = $fb->path;
                     $pdfPath2 = 'app/public/' . $filePath;
-                    unlink(storage_path($pdfPath2));
-                    $fb->delete();
+            
+                    // Mendapatkan path lengkap ke file
+                    $fullPath = storage_path($pdfPath2);
+            
+                    // Periksa apakah file tersebut ada sebelum mencoba menghapus
+                    if (file_exists($fullPath)) {
+                        unlink($fullPath); // Menghapus file jika ada
+                        $fb->delete(); // Menghapus referensi dari database
+                    } else {
+                        echo "File tidak ditemukan: " . $fullPath;
+                        // Anda bisa menambahkan kode lain di sini untuk menangani kasus ketika file tidak ditemukan
+                    }
                 }
             }
 
