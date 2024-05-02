@@ -53,6 +53,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/showletters5', [LetterController::class, 'showseksi5'])->middleware('user-access:seksi5');
     Route::get('/showDetailLetter{id}', [LetterController::class, 'showdetailletter']);
 
+    Route::get('/showAllLetters', [LetterController::class, 'showAllLetters']);//rekap
+
     Route::put('/dispositionletters/{id}', [LetterController::class, 'disposisikan']);
 
     Route::delete('/deleteOutgoingLetters/{id}', [OutgoingController::class, 'delete']);

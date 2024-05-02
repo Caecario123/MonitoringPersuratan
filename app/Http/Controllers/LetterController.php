@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\File;
 use App\Models\Letters;
 use App\Models\OutgoingLetter;
+use App\Models\Filebalas;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -438,6 +439,49 @@ class LetterController extends Controller
             'data' => [
                 'letter' => $letter,
                 'file' => $file
+            ]
+        ], 200);
+    } catch (\Exception $e) {
+        // Mengembalikan pesan kesalahan jika terjadi kesalahan dalam pengambilan data
+        return response()->json([
+            'status' => 'error',
+            'statusCode' => 500,
+            'message' => 'Internal Server Error',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+public function showAllLetters()
+    {
+    try {
+        $letter = Letters::all(); // Mengambil data surat berdasarkan ID
+        $file = File::all(); // Mengambil data file berdasarkan ID
+        $outgoingletter = OutgoingLetter::all(); // Mengambil data surat berdasarkan ID
+        $filebalas = Filebalas::all();
+        if (!$letter && !$file) {
+            return response()->json([
+                'status' => 'error',
+                'statusCode' => 404,
+                'message' => 'Data not found'
+            ], 404);
+        }
+        if (!$outgoingletter && !$filebalas) {
+            return response()->json([
+                'status' => 'error',
+                'statusCode' => 404,
+                'message' => 'Data not found'
+            ], 404);
+        }
+        // Mengembalikan data dalam format JSON dengan status 200 (OK)
+        return response()->json([
+            'status' => 'success', 
+            'statusCode' => 200,
+            'message' => 'Data retrieved successfully',
+            'data' => [
+                'letter' => $letter,
+                'file' => $file,
+                'outgoingletter' =>$outgoingletter,
+                'filebalas' => $filebalas
             ]
         ], 200);
     } catch (\Exception $e) {
