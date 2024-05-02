@@ -416,4 +416,39 @@ class LetterController extends Controller
             'message' => 'Internal Server Error',
             'error' => $e->getMessage()
         ], 500);    }}
+        public function showdetailletter($id)
+    {
+    try {
+        $letter = Letters::find($id); // Mengambil data surat berdasarkan ID
+        $file = File::find($id); // Mengambil data file berdasarkan ID
+
+        if (!$letter && !$file) {
+            return response()->json([
+                'status' => 'error',
+                'statusCode' => 404,
+                'message' => 'Data not found'
+            ], 404);
+        }
+
+        // Mengembalikan data dalam format JSON dengan status 200 (OK)
+        return response()->json([
+            'status' => 'success', 
+            'statusCode' => 200,
+            'message' => 'Data retrieved successfully',
+            'data' => [
+                'letter' => $letter,
+                'file' => $file
+            ]
+        ], 200);
+    } catch (\Exception $e) {
+        // Mengembalikan pesan kesalahan jika terjadi kesalahan dalam pengambilan data
+        return response()->json([
+            'status' => 'error',
+            'statusCode' => 500,
+            'message' => 'Internal Server Error',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
 }

@@ -58,5 +58,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/addOutgoingLetters/{id}', [OutgoingController::class, 'store']);
     Route::post('/updateOutgoingLetters/{id}', [OutgoingController::class, 'update']);
     Route::get('/showOutgoingLetters', [OutgoingController::class,  'daftarbalasan']);
+    Route::get('/showOutgoingLetters/{id}', [OutgoingController::class,  'daftarbalasan']);
+
 });
 
