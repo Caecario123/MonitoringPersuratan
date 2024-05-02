@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
+use App\Models\Filebalas;
 use App\Models\Letters;
 use App\Models\OutgoingLetter;
-use App\Models\Filebalas;
-
 use App\Models\User;
 use File as files;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class OutgoingController extends Controller
 {
