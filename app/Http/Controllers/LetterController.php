@@ -417,6 +417,7 @@ class LetterController extends Controller
             'message' => 'Internal Server Error',
             'error' => $e->getMessage()
         ], 500);    }}
+        
         public function showdetailletter($id)
     {
     try {

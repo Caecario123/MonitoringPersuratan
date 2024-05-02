@@ -51,7 +51,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/showletters3', [LetterController::class, 'showseksi3'])->middleware('user-access:seksi3');
     Route::get('/showletters4', [LetterController::class, 'showseksi4'])->middleware('user-access:seksi4');
     Route::get('/showletters5', [LetterController::class, 'showseksi5'])->middleware('user-access:seksi5');
-    Route::get('/showDetailLetter{id}', [LetterController::class, 'showdetailletter']);
+    Route::get('/showDetailLetter/{id}', [LetterController::class, 'showdetailletter']);
 
     Route::get('/showAllLetters', [LetterController::class, 'showAllLetters']);//rekap
 
