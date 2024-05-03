@@ -502,7 +502,7 @@ public function showletter()
         $letters = Letters::where('disposition_process', 'like', '%Seksi pengendalian dan penanganan sengketa%')->get();
         $files = File::all(); // Mengambil semua data file
         $id = Auth::id();
-        $type= User::where('id', 'like', $id)->get();
+        $type= User::where('id', 'like', $id)->get('type');
         dd($type);
         // Menggabungkan data surat dan data file menjadi satu koleksi
         $datas = $letters->merge($files);
