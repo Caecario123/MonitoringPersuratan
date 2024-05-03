@@ -100,7 +100,7 @@ class UserController extends Controller
     return response()->json([
         'status' => true,
         'statusCode' => 200,
-        'message' => 'Success get all users',
+        'message' => 'Menampilkan semua data users',
         'data' => $users
     ], 200);
 }
@@ -115,9 +115,9 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if (!$user) {
-            return response()->json(['status' => false, 'statusCode' => 404, 'message' => 'User not found'], 404);
+            return response()->json(['status' => false, 'statusCode' => 404, 'message' => 'User tidak ditemukan'], 404);
         }
-        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Success get data user', 'data' => $user], 200);
+        return response()->json(['status' => true, 'statusCode' => 200, 'message' => 'Menampikan data user', 'data' => $user], 200);
     }
 
     /**
@@ -134,20 +134,32 @@ class UserController extends Controller
         return response()->json([
             'status' => false,
             'statusCode' => 404,
-            'message' => 'User not found'
+            'message' => 'User tidak ditemukan'
         ], 404);
     }
 
     $validator = Validator::make($request->all(), [
         'email' => [
-            'required',
+            'nullable',
             'email',
             Rule::unique('users')->ignore($user->id),
         ],
-        'nama' => 'required',
-        'password' => 'nullable',
+        'nama' => 'nullable',
         'type' => 'nullable|in:0,1,2,3,4,5,6,7',
     ]);
+
+    // Check if at least one field is being updated
+    if (
+        !$request->has('email') &&
+        !$request->has('nama') &&
+        !$request->has('type')
+    ) {
+        return response()->json([
+            'status' => false,
+            'statusCode' => 422,
+            'message' => 'Tidak ada data yang diubah'
+        ], 422);
+    }
 
     if ($validator->fails()) {
         return response()->json([
@@ -158,10 +170,11 @@ class UserController extends Controller
         ], 422);
     }
 
-    $user->email = $request->email;
-    $user->name = $request->nama;
-    if ($request->has('password')) {
-        $user->password = Hash::make($request->password);
+    if ($request->has('email')) {
+        $user->email = $request->email;
+    }
+    if ($request->has('nama')) {
+        $user->name = $request->nama;
     }
     if ($request->has('type')) {
         $user->type = $request->type;
@@ -171,9 +184,10 @@ class UserController extends Controller
     return response()->json([
         'status' => true,
         'statusCode' => 200,
-        'message' => 'User updated successfully'
+        'message' => 'User berhasil diupdate'
     ], 200);
 }
+
 
 
     /**
@@ -189,7 +203,7 @@ class UserController extends Controller
         return response()->json([
             'status' => false,
             'statusCode' => 404,
-            'message' => 'User not found'
+            'message' => 'User tidak ditemukan'
         ], 404);
     }
     $user->delete();
@@ -197,7 +211,7 @@ class UserController extends Controller
     return response()->json([
         'status' => true,
         'statusCode' => 200,
-        'message' => 'User deleted successfully'
+        'message' => 'User berhasil dihapus'
     ], 200);
 }
     /**
@@ -239,7 +253,54 @@ class UserController extends Controller
     return response()->json([
         'status' => true,
         'statusCode' => 201,
-        'message' => 'User created successfully'
+        'message' => 'User berhasil dibuat'
     ], 201);
 }
+public function changePassword(Request $request, $id)
+{
+    $user = User::find($id);
+    if (!$user) {
+        return response()->json([
+            'status' => false,
+            'statusCode' => 404,
+            'message' => 'User tidak ditemukan'
+        ], 404);
+    }
+
+    // Validate the request data
+    $validator = Validator::make($request->all(), [
+        'old_password' => 'required',
+        'new_password' => 'required|min:8',
+        'confirm_password' => 'required|same:new_password',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'statusCode' => 422,
+            'message' => 'Validation error',
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    // Check if the old password matches
+    if (!Hash::check($request->old_password, $user->password)) {
+        return response()->json([
+            'status' => false,
+            'statusCode' => 422,
+            'message' => 'Password lama salah'
+        ], 422);
+    }
+
+    // Update the password
+    $user->password = Hash::make($request->new_password);
+    $user->save();
+
+    return response()->json([
+        'status' => true,
+        'statusCode' => 200,
+        'message' => 'Password berhasil diupdate'
+    ], 200);
 }
+}
+
