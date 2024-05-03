@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
+use App\Models\Filebalas;
 use App\Models\Letters;
 use App\Models\OutgoingLetter;
-use App\Models\Filebalas;
-
 use App\Models\User;
 use File as files;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class OutgoingController extends Controller
 {
@@ -82,14 +83,13 @@ class OutgoingController extends Controller
     }
     }
 
-    public function store(Request $request)
+    public function store(Request $request,$id)
     {
         try {
             // Validasi permintaan
             $validator = $request->validate([
                 'reference_number2' => 'required|string',
                 'outgoing_letter_date' => 'required|date',
-                'letter_id' => 'nullable|string',
                 'note' => 'nullable|string',
                 'user_id' => 'nullable|string',
                 'status' => 'nullable|string',
@@ -101,7 +101,7 @@ class OutgoingController extends Controller
     
             // Simpan status dari data untuk pembaruan tabel Letters
             $status = $data['status'];
-            $letterid = $data['letter_id'];
+            $letterid = $id;
             $data['user_id'] = $data['user_id']; // $request->input('user_id', auth()->user()->id);
     
             Letters::whereId($letterid)->update(['status' => $status]);
@@ -133,27 +133,79 @@ class OutgoingController extends Controller
     
 
     public function daftarbalasan($id = null)
-    {  
-        try {
-            if ($id === null) {
-                $outgoingLetters = OutgoingLetter::all();
-            } else {
-                $outgoingLetters = OutgoingLetter::where('letter_id', $id)->get();
+{  
+    try {
+        if ($id === null) {
+            $outgoingLetters = OutgoingLetter::all();
+            if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data
+                return response()->json([
+                    'status' => false,
+                    'statusCode' => 404,
+                    'message' => 'No outgoing letters found'
+                ], 404);
             }
-            return response()->json([
-                'status' => true,
-                'statusCode' => 200,
-                'data' => $outgoingLetters,
-                'message' => 'Data Outgoing Letters retrieved successfully'
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'statusCode' => 500,
-                'error' => $e->getMessage()
-            ], 500);
+        } else {
+            $outgoingLetters = OutgoingLetter::where('letter_id', $id)->get();
+            if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data untuk ID tertentu
+                return response()->json([
+                    'status' => false,
+                    'statusCode' => 404,
+                    'message' => 'No outgoing letters found for provided ID'
+                ], 404);
+            }
         }
+        return response()->json([
+            'status' => true,
+            'statusCode' => 200,
+            'data' => $outgoingLetters,
+            'message' => 'Data Outgoing Letters retrieved successfully'
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'statusCode' => 500,
+            'message' => 'Internal Server Error',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
+public function detailbalasan($id = null)
+{  
+    try {
+        if ($id === null) {
+            $outgoingLetters = OutgoingLetter::all();
+            if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data
+                return response()->json([
+                    'status' => false,
+                    'statusCode' => 404,
+                    'message' => 'No outgoing letters found'
+                ], 404);
+            }
+        } else {
+            $outgoingLetters = OutgoingLetter::where('id', $id)->get();
+            if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data untuk ID tertentu
+                return response()->json([
+                    'status' => false,
+                    'statusCode' => 404,
+                    'message' => 'No outgoing letters found for provided ID'
+                ], 404);
+            }
+        }
+        return response()->json([
+            'status' => true,
+            'statusCode' => 200,
+            'data' => $outgoingLetters,
+            'message' => 'Data Outgoing Letters retrieved successfully'
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'statusCode' => 500,
+            'message' => 'Internal Server Error',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
 
 
     public function streamOutgoingPDF($id)
@@ -185,10 +237,21 @@ class OutgoingController extends Controller
                 foreach ($filebalas as $fb) {
                     $filePath = $fb->path;
                     $pdfPath2 = 'app/public/' . $filePath;
-                    unlink(storage_path($pdfPath2));
-                    $fb->delete();
+            
+                    // Mendapatkan path lengkap ke file
+                    $fullPath = storage_path($pdfPath2);
+            
+                    // Periksa apakah file tersebut ada sebelum mencoba menghapus
+                    if (file_exists($fullPath)) {
+                        unlink($fullPath); // Menghapus file jika ada
+                        $fb->delete(); // Menghapus referensi dari database
+                    } else {
+                        Log::warning('File not found: ' . $fullPath);
+                        // Anda bisa menambahkan kode lain di sini untuk menangani kasus ketika file tidak ditemukan
+                    }
                 }
             }
+            
 
             // Menghapus surat
             $outgoingLetter->delete();
