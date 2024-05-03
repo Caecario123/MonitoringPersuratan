@@ -30,12 +30,41 @@ class UserController extends Controller
         'email' => 'required|email',
         'password' => 'required',
     ]);
+
+    // Cek jika validasi gagal
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    // Cek jika validasi gagal
     if ($validator->fails()) {
-        return response()->json([
-            'status' => false,
-            'statusCode' => 400,
-            'message' => 'Email and password wajib diisi.'
-        ], 400);
+        // Respon jika keduanya kosong
+        if ($validator->errors()->has('email') && $validator->errors()->has('password')) {
+            return response()->json([
+                'status' => false,
+                'statusCode' => 400,
+                'message' => 'Email dan password wajib diisi.'
+            ], 400);
+        }
+        
+        // Respon jika email wajib diisi
+        if ($validator->errors()->has('email')) {
+            return response()->json([
+                'status' => false,
+                'statusCode' => 400,
+                'message' => 'Email wajib diisi.'
+            ], 400);
+        }
+
+        // Respon jika password wajib diisi
+        if ($validator->errors()->has('password')) {
+            return response()->json([
+                'status' => false,
+                'statusCode' => 400,
+                'message' => 'Password wajib diisi.'
+            ], 400);
+        }
     }
 
     $credentials = $request->only('email', 'password');
@@ -183,7 +212,7 @@ class UserController extends Controller
     $validator = Validator::make($request->all(), [
         'email' => 'required|email',
         'nama'  => 'required',
-        'password'  => 'required',
+        'password'  => 'required|min:8',
         'type' => 'required|in:0,1,2,3,4,5,6,7',
     ]);
 
