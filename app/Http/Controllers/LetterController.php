@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\File;
 use App\Models\Letters;
+use App\Models\User;
+
 use App\Models\OutgoingLetter;
 use App\Models\Filebalas;
 
@@ -495,5 +497,32 @@ public function showAllLetters()
         ], 500);
     }
 }
-
+public function showletter()
+    {   try{
+        $letters = Letters::where('disposition_process', 'like', '%Seksi pengendalian dan penanganan sengketa%')->get();
+        $files = File::all(); // Mengambil semua data file
+        $id = Auth::id();
+        $type= User::where('id', 'like', $id)->get();
+        dd($type);
+        // Menggabungkan data surat dan data file menjadi satu koleksi
+        $datas = $letters->merge($files);
+        // $datas = Letters::where('disposition_process', 'Seksi pengendalian dan penanganan sengketa')->get();
+        // Mengembalikan koleksi data dalam format JSON dengan status 200 (OK)
+        return response()->json([
+            'status' => 'success', 
+            'statusCode' => 200,
+            'message' => 'Data retrieved successfully',
+            'data' => [
+                'letter' => $letters,
+                'file' => $files
+            ]
+        ], 200);
+        } catch (\Exception $e) {
+        // Mengembalikan pesan kesalahan jika terjadi kesalahan dalam pengambilan data
+        return response()->json([
+            'status' => 'error',
+            'statusCode' => 500,
+            'message' => 'Internal Server Error',
+            'error' => $e->getMessage()
+        ], 500);    }}
 }
