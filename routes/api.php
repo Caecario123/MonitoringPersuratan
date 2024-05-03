@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/showletters', [LetterController::class, 'show'])
+    Route::get('/show-admin-letters', [LetterController::class, 'show'])
     ->middleware('user-access:admin');
 
     // Route::get('/letters', [LetterController::class, 'store']);
@@ -38,31 +38,36 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('users/{id}', [UserController::class, 'delete']);
     Route::post('/users', [UserController::class, 'storeUser']);
 
-    Route::post('/addletters', [LetterController::class, 'store']);
-    Route::post('/updateletter/{id}', [LetterController::class, 'update']);
-    Route::delete('/deleteletter/{id}', [LetterController::class, 'delete']);
+    Route::post('/add-letters', [LetterController::class, 'store']);
+    Route::post('/update-letter/{id}', [LetterController::class, 'update']);
+    Route::delete('/delete-letter/{id}', [LetterController::class, 'delete']);
 
     // Route::middleware('auth:sanctum')->get('/showletters', [LetterController::class, 'show']);
 
     // Route::get('/showletters', [LetterController::class, 'show']);
-    Route::get('/showletterstu', [LetterController::class, 'showtu'])->middleware('user-access:tatausaha');
-    Route::get('/showletters1', [LetterController::class, 'showseksi1'])->middleware('user-access:seksi1');
-    Route::get('/showletters2', [LetterController::class, 'showseksi2'])->middleware('user-access:seksi2');
-    Route::get('/showletters3', [LetterController::class, 'showseksi3'])->middleware('user-access:seksi3');
-    Route::get('/showletters4', [LetterController::class, 'showseksi4'])->middleware('user-access:seksi4');
-    Route::get('/showletters5', [LetterController::class, 'showseksi5'])->middleware('user-access:seksi5');
-    Route::get('/showDetailLetter/{id}', [LetterController::class, 'showdetailletter']);
+    Route::get('/show-letterstu', [LetterController::class, 'showtu'])->middleware('user-access:tatausaha');
+    Route::get('/show-letters1', [LetterController::class, 'showseksi1'])->middleware('user-access:seksi1');
+    Route::get('/show-letters2', [LetterController::class, 'showseksi2'])->middleware('user-access:seksi2');
+    Route::get('/show-letters3', [LetterController::class, 'showseksi3'])->middleware('user-access:seksi3');
+    Route::get('/show-letters4', [LetterController::class, 'showseksi4'])->middleware('user-access:seksi4');
+    Route::get('/show-letters5', [LetterController::class, 'showseksi5'])->middleware('user-access:seksi5');
+   
+    // menampilkan detail surat
+    Route::get('/show-detail-letters/{id}', [LetterController::class, 'showdetailletter']);
 
-    Route::get('/showAllLetters', [LetterController::class, 'showAllLetters']);//rekap
+    // menampilkan data rekap
+    Route::get('/show-letters', [LetterController::class, 'showAllLetters']);//rekap
 
-    Route::put('/dispositionletters/{id}', [LetterController::class, 'disposisikan']);
+    // disposisi
+    Route::put('/disposition/{id}', [LetterController::class, 'disposisikan']);
 
-    Route::delete('/deleteOutgoingLetters/{id}', [OutgoingController::class, 'delete']);
-    Route::post('/addOutgoingLetters/{id}', [OutgoingController::class, 'store']);
-    Route::post('/updateOutgoingLetters/{id}', [OutgoingController::class, 'update']);
-    Route::get('/showOutgoingLetters', [OutgoingController::class,  'daftarbalasan']);
-    Route::get('/showOutgoingLetters/{id}', [OutgoingController::class,  'daftarbalasan']);
-    Route::get('/showDetailOutgoingLetters/{id}', [OutgoingController::class,  'detailbalasan']);
+    // surat balasan
+    Route::delete('/delete-reply/{id}', [OutgoingController::class, 'delete']);
+    Route::post('/add-reply/{id}', [OutgoingController::class, 'store']);
+    Route::post('/update-reply/{id}', [OutgoingController::class, 'update']);
+    Route::get('/show-reply', [OutgoingController::class,  'daftarbalasan']);
+    Route::get('/show-reply/{id}', [OutgoingController::class,  'daftarbalasan']);
+    Route::get('/show-reply-detail/{id}', [OutgoingController::class,  'detailbalasan']);
 
 });
 
