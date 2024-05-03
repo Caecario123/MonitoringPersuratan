@@ -499,11 +499,34 @@ public function showAllLetters()
 }
 public function showletter()
     {   try{
-        $letters = Letters::where('disposition_process', 'like', '%Seksi pengendalian dan penanganan sengketa%')->get();
-        $files = File::all(); // Mengambil semua data file
+         // Mengambil semua data file
         $id = Auth::id();
-        $type= User::where('id', 'like', $id)->get('type');
-        dd($type['type']);
+        $type = User::where('id', $id)->value('type'); // Langsung mengambil nilai kolom 'type'
+        if ($type=='admin'){
+            $letters = Letters::all();
+            // $letters = Letters::where('disposition_process', 'like', '%Seksi pengendalian dan penanganan sengketa%')->get();
+            $letter_id = $letters->value('type');
+            dd($letter_id);
+            $files = File::where('letter_id', 'like', '%Seksi pengendalian dan penanganan sengketa%')->get();
+        };
+        if ($type=='admin'){
+            
+        };
+        if ($type=='admin'){
+            
+        };
+        if ($type=='admin'){
+            
+        };
+        if ($type=='admin'){
+            
+        };
+        if ($type=='admin'){
+            
+        };
+        if ($type=='admin'){
+            
+        };
         // Menggabungkan data surat dan data file menjadi satu koleksi
         $datas = $letters->merge($files);
         // $datas = Letters::where('disposition_process', 'Seksi pengendalian dan penanganan sengketa')->get();
@@ -524,5 +547,5 @@ public function showletter()
             'statusCode' => 500,
             'message' => 'Internal Server Error',
             'error' => $e->getMessage()
-        ], 500);}}
+        ], 500);    }}
 }
