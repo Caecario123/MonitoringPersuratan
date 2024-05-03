@@ -503,7 +503,7 @@ public function showletter()
         $files = File::all(); // Mengambil semua data file
         $id = Auth::id();
         $type= User::where('id', 'like', $id)->get('type');
-        dd($type);
+        dd($type['type']);
         // Menggabungkan data surat dan data file menjadi satu koleksi
         $datas = $letters->merge($files);
         // $datas = Letters::where('disposition_process', 'Seksi pengendalian dan penanganan sengketa')->get();
@@ -524,5 +524,5 @@ public function showletter()
             'statusCode' => 500,
             'message' => 'Internal Server Error',
             'error' => $e->getMessage()
-        ], 500);    }}
+        ], 500);}}
 }
