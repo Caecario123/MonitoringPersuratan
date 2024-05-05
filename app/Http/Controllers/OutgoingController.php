@@ -169,8 +169,8 @@ class OutgoingController extends Controller
             'status' => true,
             'statusCode' => 200,
             'data' => [
-                'letter' => $outgoingLetters,
-                'file' => $filteredFiles
+                'replyletter' => $outgoingLetters,
+                'filebalas' => $filteredFiles
             ],
             'message' => 'Data Outgoing Letters retrieved successfully'
         ], 200);
