@@ -136,8 +136,10 @@ class OutgoingController extends Controller
     public function daftarbalasan($id = null)
 {  
     try {
+        
         if ($id === null) {
             $outgoingLetters = OutgoingLetter::all();
+            $filebalas = Filebalas::all();
             if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data
                 return response()->json([
                     'status' => false,
@@ -147,6 +149,14 @@ class OutgoingController extends Controller
             }
         } else {
             $outgoingLetters = OutgoingLetter::where('letter_id', $id)->get();
+            $filebalas = Filebalas::where('letter_balas_id',$id)->get();
+            foreach ($outgoingLetters as $letter) {
+                foreach ($filebalas as $file) {
+                    if ($file->letter_balas_id == $letter->id) {
+                        $filteredFiles[] = $file; // Menambahkan file ke array jika letter_id cocok dengan id dari letters
+                    }
+                }
+            }
             if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data untuk ID tertentu
                 return response()->json([
                     'status' => false,
@@ -158,7 +168,10 @@ class OutgoingController extends Controller
         return response()->json([
             'status' => true,
             'statusCode' => 200,
-            'data' => $outgoingLetters,
+            'data' => [
+                'letter' => $outgoingLetters,
+                'file' => $filteredFiles
+            ],
             'message' => 'Data Outgoing Letters retrieved successfully'
         ], 200);
     } catch (\Exception $e) {
