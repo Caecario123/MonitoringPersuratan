@@ -424,7 +424,8 @@ class LetterController extends Controller
     {
     try {
         $letter = Letters::find($id); // Mengambil data surat berdasarkan ID
-        $file = File::find($id); // Mengambil data file berdasarkan ID
+        // $file = File::find($id); // Mengambil data file berdasarkan ID
+        $file = File::where('letter_id', $id)->get(); // Langsung mengambil nilai kolom 'type'
 
         if (!$letter && !$file) {
             return response()->json([
