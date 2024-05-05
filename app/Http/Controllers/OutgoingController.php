@@ -92,6 +92,7 @@ class OutgoingController extends Controller
                 'outgoing_letter_date' => 'required|date',
                 'note' => 'nullable|string',
                 'user_id' => 'nullable|string',
+                'letter_id' => 'nullable|string',
                 'status' => 'nullable|string',
                 'file' => 'required|mimes:pdf|max:2048',
             ]);
@@ -103,7 +104,7 @@ class OutgoingController extends Controller
             $status = $data['status'];
             $letterid = $id;
             $data['user_id'] = $data['user_id']; // $request->input('user_id', auth()->user()->id);
-    
+            $data['letter_id'] = $data[$id];
             Letters::whereId($letterid)->update(['status' => $status]);
     
             unset($data['status']);
