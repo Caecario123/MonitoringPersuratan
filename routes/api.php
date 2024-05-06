@@ -68,7 +68,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/update-reply/{id}', [OutgoingController::class, 'update']);
     Route::get('/show-reply', [OutgoingController::class,  'daftarbalasan']);
     Route::get('/show-reply/{id}', [OutgoingController::class,  'daftarbalasan']);
-    Route::get('/show-reply-detail/{id}', [OutgoingController::class,  'detailbalasan']);
+    Route::get('/show-reply-detail/{id}', [OutgoingController::class,  'daftarbalasan']);
     Route::get('/coba', [LetterController::class, 'showletter']);
     //rekap
 

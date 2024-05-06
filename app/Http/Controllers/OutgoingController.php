@@ -92,6 +92,7 @@ class OutgoingController extends Controller
                 'outgoing_letter_date' => 'required|date',
                 'note' => 'nullable|string',
                 'user_id' => 'nullable|string',
+                'letter_id' => 'nullable|string',
                 'status' => 'nullable|string',
                 'file' => 'required|mimes:pdf|max:2048',
             ]);
@@ -103,7 +104,7 @@ class OutgoingController extends Controller
             $status = $data['status'];
             $letterid = $id;
             $data['user_id'] = $data['user_id']; // $request->input('user_id', auth()->user()->id);
-    
+            $data['letter_id'] = $data[$id];
             Letters::whereId($letterid)->update(['status' => $status]);
     
             unset($data['status']);
@@ -135,8 +136,11 @@ class OutgoingController extends Controller
     public function daftarbalasan($id = null)
 {  
     try {
+        
+        
         if ($id === null) {
             $outgoingLetters = OutgoingLetter::all();
+            $filteredFiles = Filebalas::all();
             if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data
                 return response()->json([
                     'status' => false,
@@ -146,6 +150,15 @@ class OutgoingController extends Controller
             }
         } else {
             $outgoingLetters = OutgoingLetter::where('letter_id', $id)->get();
+            $filebalas = Filebalas::where('letter_balas_id',$id)->get();
+            foreach ($outgoingLetters as $letter) {
+                
+                foreach ($filebalas as $file) {
+                    if ($file->id == $letter->id) {
+                        $filteredFiles[] = $file; // Menambahkan file ke array jika letter_id cocok dengan id dari letters
+                    }
+                }
+            }
             if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data untuk ID tertentu
                 return response()->json([
                     'status' => false,
@@ -157,7 +170,10 @@ class OutgoingController extends Controller
         return response()->json([
             'status' => true,
             'statusCode' => 200,
-            'data' => $outgoingLetters,
+            'data' => [
+                'replyletter' => $outgoingLetters,
+                'filebalas' => $filteredFiles
+            ],
             'message' => 'Data Outgoing Letters retrieved successfully'
         ], 200);
     } catch (\Exception $e) {

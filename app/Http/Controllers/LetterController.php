@@ -424,7 +424,8 @@ class LetterController extends Controller
     {
     try {
         $letter = Letters::find($id); // Mengambil data surat berdasarkan ID
-        $file = File::find($id); // Mengambil data file berdasarkan ID
+        // $file = File::find($id); // Mengambil data file berdasarkan ID
+        $file = File::where('letter_id', $id)->get(); // Langsung mengambil nilai kolom 'type'
 
         if (!$letter && !$file) {
             return response()->json([
@@ -505,30 +506,92 @@ public function showletter()
         if ($type=='admin'){
             $letters = Letters::all();
             // $letters = Letters::where('disposition_process', 'like', '%Seksi pengendalian dan penanganan sengketa%')->get();
-            $letter_id = $letters->value('type');
-            dd($letter_id);
-            $files = File::where('letter_id', 'like', '%Seksi pengendalian dan penanganan sengketa%')->get();
+            // dd($letter_id);
+            $files = File::all();
+            $filteredFiles = [];
+            foreach ($letters as $letter) {
+                foreach ($files as $file) {
+                    if ($file->letter_id == $letter->id) {
+                        $filteredFiles[] = $file; // Menambahkan file ke array jika letter_id cocok dengan id dari letters
+                    }
+                }
+            }
         };
-        if ($type=='admin'){
-            
+        if ($type=='tatausaha'){
+            $letters = Letters::where('disposition_process', 'like', '%Tata Usaha%')->get(); // Mengambil semua data surat
+            $files = File::all(); // Mengambil semua data file
+            $filteredFiles = [];
+            foreach ($letters as $letter) {
+                foreach ($files as $file) {
+                    if ($file->letter_id == $letter->id) {
+                        $filteredFiles[] = $file; // Menambahkan file ke array jika letter_id cocok dengan id dari letters
+                    }
+                }
+            }
         };
-        if ($type=='admin'){
-            
+        if ($type=='seksi1'){
+            $letters = Letters::where('disposition_process', 'like', '%Seksi penetapan hak dan pendaftaran%')->get();
+            $files = File::all(); // Mengambil semua data file
+            $filteredFiles = [];
+            foreach ($letters as $letter) {
+                foreach ($files as $file) {
+                    if ($file->letter_id == $letter->id) {
+                        $filteredFiles[] = $file; // Menambahkan file ke array jika letter_id cocok dengan id dari letters
+                    }
+                }
+            }
         };
-        if ($type=='admin'){
-            
+        if ($type=='seksi2'){
+            $letters = Letters::where('disposition_process', 'like', '%Seksi survei dan pemetaan%')->get();
+            $files = File::all();
+            $filteredFiles = [];
+            foreach ($letters as $letter) {
+                foreach ($files as $file) {
+                    if ($file->letter_id == $letter->id) {
+                        $filteredFiles[] = $file; // Menambahkan file ke array jika letter_id cocok dengan id dari letters
+                    }
+                }
+            }
+            dd($letters);
         };
-        if ($type=='admin'){
-            
+        if ($type=='seksi3'){
+            $letters = Letters::where('disposition_process', 'like', '%Seksi penataan dan pemberdayaan%')->get();
+            $files = File::all();
+            $filteredFiles = [];
+            foreach ($letters as $letter) {
+                foreach ($files as $file) {
+                    if ($file->letter_id == $letter->id) {
+                        $filteredFiles[] = $file; // Menambahkan file ke array jika letter_id cocok dengan id dari letters
+                    }
+                }
+            }
         };
-        if ($type=='admin'){
-            
+        if ($type=='seksi4'){
+            $letters = Letters::where('disposition_process', 'like', '%Seksi pengadaan tanah dan pengembangan%')->get();
+            $files = File::all();
+            $filteredFiles = [];
+            foreach ($letters as $letter) {
+                foreach ($files as $file) {
+                    if ($file->letter_id == $letter->id) {
+                        $filteredFiles[] = $file; // Menambahkan file ke array jika letter_id cocok dengan id dari letters
+                    }
+                }
+            }
         };
-        if ($type=='admin'){
-            
+        if ($type=='seksi5'){
+            $letters = Letters::where('disposition_process', 'like', '%Seksi pengendalian dan penanganan sengketa%')->get();
+            $files = File::all();
+            $filteredFiles = [];
+            foreach ($letters as $letter) {
+                foreach ($files as $file) {
+                    if ($file->letter_id == $letter->id) {
+                        $filteredFiles[] = $file; // Menambahkan file ke array jika letter_id cocok dengan id dari letters
+                    }
+                }
+            }
         };
         // Menggabungkan data surat dan data file menjadi satu koleksi
-        $datas = $letters->merge($files);
+        // $datas = $letters->merge($files);
         // $datas = Letters::where('disposition_process', 'Seksi pengendalian dan penanganan sengketa')->get();
         // Mengembalikan koleksi data dalam format JSON dengan status 200 (OK)
         return response()->json([
@@ -537,7 +600,7 @@ public function showletter()
             'message' => 'Data retrieved successfully',
             'data' => [
                 'letter' => $letters,
-                'file' => $files
+                'file' => $filteredFiles
             ]
         ], 200);
         } catch (\Exception $e) {
