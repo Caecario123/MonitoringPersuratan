@@ -105,7 +105,7 @@ class OutgoingController extends Controller
             // $letterid = $id;
             $data['user_id'] = $data['user_id']; // $request->input('user_id', auth()->user()->id);
             $data['letter_id'] = $data[$id];
-            Letters::whereId($letterid)->update(['status' => $status]);
+            Letters::whereId($id)->update(['status' => $status]);
     
             unset($data['status']);
     
