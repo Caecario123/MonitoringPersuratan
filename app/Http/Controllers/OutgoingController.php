@@ -141,12 +141,16 @@ class OutgoingController extends Controller
         if ($id === null) {
             $outgoingLetters = OutgoingLetter::all();
             $filteredFiles = Filebalas::all();
-            if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data
+            if ($outgoingLetters->isEmpty()) { 
                 return response()->json([
-                    'status' => false,
-                    'statusCode' => 404,
+                    'status' => true,
+                    'statusCode' => 200,
+                    'data' => [
+                        'replyletter' => [],
+                        'filebalas' => []
+                    ],
                     'message' => 'No outgoing letters found'
-                ], 404);
+                ], 200);
             }
             } else {
                 $outgoingLetters = OutgoingLetter::where('letter_id', $id)->get();
