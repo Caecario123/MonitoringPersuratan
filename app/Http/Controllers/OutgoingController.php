@@ -137,9 +137,10 @@ class OutgoingController extends Controller
 {  
     try {
         
+        
         if ($id === null) {
             $outgoingLetters = OutgoingLetter::all();
-            $filebalas = Filebalas::all();
+            $filteredFiles = Filebalas::all();
             if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data
                 return response()->json([
                     'status' => false,
@@ -151,8 +152,9 @@ class OutgoingController extends Controller
             $outgoingLetters = OutgoingLetter::where('letter_id', $id)->get();
             $filebalas = Filebalas::where('letter_balas_id',$id)->get();
             foreach ($outgoingLetters as $letter) {
+                
                 foreach ($filebalas as $file) {
-                    if ($file->letter_balas_id == $letter->id) {
+                    if ($file->id == $letter->id) {
                         $filteredFiles[] = $file; // Menambahkan file ke array jika letter_id cocok dengan id dari letters
                     }
                 }
