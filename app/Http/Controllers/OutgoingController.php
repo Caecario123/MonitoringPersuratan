@@ -154,14 +154,17 @@ class OutgoingController extends Controller
             }
             } else {
                 $outgoingLetters = OutgoingLetter::where('letter_id', $id)->get();
-                $filebalas = Filebalas::where('letter_balas_id',$id)->get();
+                $filteredFiles = [];
                 foreach ($outgoingLetters as $letter) {
-                    
-                    foreach ($filebalas as $file) {
-                        if ($file->id == $letter->id) {
-                            $filteredFiles[] = $file; // Menambahkan file ke array jika letter_id cocok dengan id dari letters
-                        }
-                    }
+                    $filebalas = Filebalas::where('letter_balas_id',$letter->id)->get();
+                    $filteredFiles[] = $filebalas; 
+                    // foreach ($filebalas as $file) {
+                    //     if ($file->id == $letter->id) {
+                    //         dd($outgoingLetters);
+                            
+                    //        // Menambahkan file ke array jika letter_id cocok dengan id dari letters
+                    //     }
+                    // }
                 }
             if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data untuk ID tertentu
                 return response()->json([
@@ -203,6 +206,7 @@ public function detailbalasan($id = null)
             }
         } else {
             $outgoingLetters = OutgoingLetter::where('id', $id)->get();
+            $filebalas = Filebalas::where('letter_balas_id',$id)->get();
             if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data untuk ID tertentu
                 return response()->json([
                     'status' => false,
@@ -214,7 +218,10 @@ public function detailbalasan($id = null)
         return response()->json([
             'status' => true,
             'statusCode' => 200,
-            'data' => $outgoingLetters,
+            'data' => [
+                'replyletter' => $outgoingLetters,
+                'filebalas' => $filebalas
+            ],
             'message' => 'Data Outgoing Letters retrieved successfully'
         ], 200);
     } catch (\Exception $e) {
