@@ -71,7 +71,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/show-reply-detail/{id}', [OutgoingController::class,  'detailbalasan']);
     Route::get('/coba', [LetterController::class, 'showletter']);
     //rekap
-    Route::get('/cobadelete', [LetterController::class, 'deleteAllFiles']);
+    Route::delete('/cobadelete', [LetterController::class, 'deleteAllFiles']);
 
 
 });
