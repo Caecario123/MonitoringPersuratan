@@ -17,92 +17,65 @@ use Illuminate\Support\Facades\Validator;
 class LetterController extends Controller
 {
     public function store(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'reference_number' => 'nullable|unique:letters',
-        'letters_type' => 'required',
-        'letter_date' => 'required|date',
-        'received_date' => 'nullable|date',
-        'from' => 'nullable|string',
-        'description' => 'nullable|string',
-        'disposition_date' => 'nullable|date',
-        'disposition_note' => 'nullable|string',
-        'disposition_process' => 'nullable|string',
-        'status' => 'nullable|string',
-        'user_id' => 'nullable|exists:users,id',
-        'read_status' => 'nullable|string',
-        'file' => 'required|mimes:pdf|max:2048',
-    ]);
+    {
+        $validator = Validator::make($request->all(), [
+            'reference_number' => 'nullable|unique:letters',
+            'letters_type' => 'required',
+            'letter_date' => 'required|date',
+            'received_date' => 'nullable|date',
+            'from' => 'nullable|string',
+            'description' => 'nullable|string',
+            'disposition_date' => 'nullable|date',
+            'disposition_note' => 'nullable|string',
+            'disposition_process' => 'nullable|string',
+            'status' => 'nullable|string',
+            'user_id' => 'nullable|exists:users,id',
+            'read_status' => 'nullable|string',
+            'file' => 'required|mimes:pdf|max:2048',
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json($validator->errors(), 422);
-    }
-
-    // Memeriksa apakah hanya satu file yang dilampirkan
-    if ($request->hasFile('file') && count($request->file('file')) != 1) {
-        return response()->json([
-            'message' => 'You can only attach one file',
-            'status' => false,
-            'statusCode' => 422
-        ], 422);
-    }
-
-    try {
-        // Hapus file pertama jika ada sebelum menyimpan yang baru
-        if ($request->hasFile('file') && $request->file('file')->isValid()) {
-            // Mendapatkan file pertama dari database
-            $existingFile = File::where('letter_id', $letter->id)->first();
-            
-            // Jika ada file pertama, hapus
-            if ($existingFile) {
-                Storage::delete($existingFile->path);
-                $existingFile->delete();
-            }
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
 
-        $data = $request->all();
-        $data['read_status'] = $request->input('read_status', '0');
-        $data['disposition_note'] = $request->input('disposition_note', '-');
-        $data['disposition_process'] = $request->input('disposition_process', 'Belum ditindak lanjuti');
-        $data['status'] = $request->input('status', 'Pending');
-        $data['user_id'] = $request->input('user_id', Auth::id());
-        $letter = Letters::create($data);
+        try {
+            $data = $request->all();
+            $data['read_status'] = $request->input('read_status', '0');
+            $data['disposition_note'] = $request->input('disposition_note', '-');
+            $data['disposition_process'] = $request->input('disposition_process', 'Belum ditindak lanjuti');
+            $data['status'] = $request->input('status', 'Pending');
+            $data['user_id'] = $request->input('user_id', Auth::id());
+            $letter = Letters::create($data);
 
-        // Mengambil file yang dilampirkan
-        $file = $request->file('file');
-        
-        // Menyimpan file
-        $pdfName = time().'_'.$file->getClientOriginalName();
-        $pdfPath = $file->storeAs('Masuk', $pdfName, 'public');
+            $pdfName = time().'_'.$request->file('file')->getClientOriginalName();
+            $pdfPath = $request->file('file')->storeAs('Masuk', $pdfName, 'public');
 
-        // Membuat data file
-        $fileData = [
-            'name' => $pdfName,
-            'path' => $pdfPath,
-            'letter_id' => $letter->id,
-        ];
+            $fileData = [
+                'name' => $pdfName,
+                'path' => $pdfPath,
+                'letter_id' => $letter->id,
+            ];
 
-        File::create($fileData);
+            File::create($fileData);
 
-        return response()->json([
-            'message' => 'Letter created successfully',
-            'status' => true,
-            'statusCode' => 201,
-            'data' => [
-                'letter' => $letter,
-                'file' => $fileData
-            ]
-        ], 201);
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Failed to create letter',
-            'status' => false,
-            'statusCode' => 500,
-            'error' => $e->getMessage()
-        ], 500);
+            return response()->json([
+                'message' => 'Letter created successfully',
+                'status' => true,
+                'statusCode' => 201,
+                'data' => [
+                    'letter' => $letter,
+                    'file' => $fileData
+                ]
+            ], 201);
+            
+                } catch (\Exception $e) {
+                    return response()->json([
+                        'message' => 'Failed to create letter',
+                        'status' => false,
+                        'statusCode' => 500,
+                        'error' => $e->getMessage()
+                    ], 500);}
     }
-}
-
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -638,28 +611,4 @@ public function showletter()
             'message' => 'Internal Server Error',
             'error' => $e->getMessage()
         ], 500);    }}
-        
-        public function deleteAllFiles()
-{
-    try {
-        // Menghapus semua data di tabel File
-        File::truncate();
-
-        // Menghapus semua data di tabel Filebalas
-        Filebalas::truncate();
-
-        return response()->json([
-            'status' => true,
-            'statusCode' => 200,
-            'message' => 'All files deleted successfully'
-        ], 200);
-    } catch (\Exception $e) {
-        return response()->json([
-            'status' => false,
-            'statusCode' => 500,
-            'message' => 'Failed to delete files',
-            'error' => $e->getMessage()
-        ], 500);
-    }
-}
 }
