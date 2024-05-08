@@ -638,4 +638,28 @@ public function showletter()
             'message' => 'Internal Server Error',
             'error' => $e->getMessage()
         ], 500);    }}
+        
+        public function deleteAllFiles()
+{
+    try {
+        // Menghapus semua data di tabel File
+        File::truncate();
+
+        // Menghapus semua data di tabel Filebalas
+        Filebalas::truncate();
+
+        return response()->json([
+            'status' => true,
+            'statusCode' => 200,
+            'message' => 'All files deleted successfully'
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'statusCode' => 500,
+            'message' => 'Failed to delete files',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
 }
