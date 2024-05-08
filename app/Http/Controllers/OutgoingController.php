@@ -163,7 +163,7 @@ class OutgoingController extends Controller
                     //         dd($outgoingLetters);
                             
                     //        // Menambahkan file ke array jika letter_id cocok dengan id dari letters
-                    //     }
+                    //     }    
                     // }
                 }
             if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data untuk ID tertentu
