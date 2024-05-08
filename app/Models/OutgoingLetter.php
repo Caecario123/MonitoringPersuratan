@@ -17,6 +17,7 @@ class Outgoingletter extends Model
         'reference_number2',
         'letter_id',
         'note',
+        'from',
         'user_id',
     ];  
     use HasFactory;

@@ -8,6 +8,7 @@ use App\Models\User;
 use File as files;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -92,6 +93,7 @@ class OutgoingController extends Controller
                 'reference_number2' => 'required|string',
                 'outgoing_letter_date' => 'required|date',
                 'note' => 'nullable|string',
+                'from' => 'nullable|string',
                 'user_id' => 'nullable|string',
                 'letter_id' => 'nullable|string',
                 'status' => 'nullable|string',
@@ -100,13 +102,15 @@ class OutgoingController extends Controller
     
             // Ambil data dari permintaan
             $data = $request->all();
-    
+            $id = Auth::id();
+            $type = User::where('id', $id)->value('type');
+            
             // Simpan status dari data untuk pembaruan tabel Letters
             $status = $data['status'];
             $letterid = $id;
             $data['user_id'] = $data['user_id']; // $request->input('user_id', auth()->user()->id);
             $data['letter_id'] = $letterid;
-            
+            $data['from'] = $type; // $request->input('user_id', auth()->user()->id);
             Letters::whereId($id)->update(['status' => $status]);
     
             unset($data['status']);
