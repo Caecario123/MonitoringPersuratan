@@ -79,6 +79,8 @@ class LetterController extends Controller
 
     public function update(Request $request, $id)
     {
+    try {
+        // Validasi permintaan
         $validator = Validator::make($request->all(), [
             'reference_number' => 'nullable',
             'letters_type' => 'required',
@@ -88,28 +90,31 @@ class LetterController extends Controller
             'description' => 'nullable|string',
             'file' => 'required|mimes:pdf|max:2048',
         ]);
-
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['status' => false, 'statusCode' => 400, 'message' => $validator->errors()->first()], 400);
         }
 
         $data = $request->only(['reference_number', 'letters_type', 'letter_date', 'received_date', 'from', 'description']);
 
-        try {
+        if ($request->file('file')) {
             // Update the letter information
-            $letter = Letters::where('id', $id)->update($data);
-
-            // Handle the file update
+            $letter = Letters::whereId($id)->first();
+            if (!$letter) {
+                return response()->json(['status' => false, 'statusCode' => 404, 'error' => 'Letter not found.'], 404);
+            }
+            // Periksa apakah surat berhasil diperbarui
+            
+                // Handle the file update
             $existingFile = File::where('letter_id', $id)->first();
             if ($existingFile) {
                 // Delete the old file
                 Storage::disk('public')->delete($existingFile->path);
             }
-
+    
             // Store the new file
             $pdfName = time() . '_' . $request->file('file')->getClientOriginalName();
             $pdfPath = $request->file('file')->storeAs('Masuk', $pdfName, 'public');
-
+    
             // Update file information or create new file record
             $fileData = [
                 'name' => $pdfName,
@@ -117,27 +122,28 @@ class LetterController extends Controller
                 'letter_id' => $id,
             ];
             File::updateOrCreate(['letter_id' => $id], $fileData);
+            Letters::whereId($id)->update($data);
 
-                // Jika surat berhasil diperbarui
-                return response()->json([
-                    'message' => 'Letter updated successfully',
-                    'status' => true,
-                    'statusCode' => 200,
-                    'data' => [
-                        'letter' => Letters::find($id),
-                        'file' => $fileData
-                    ]
-                ], 200);
-            } catch (\Exception $e) {
-                // Jika terjadi kesalahan saat memperbarui surat
-                return response()->json([
-                    'message' => 'Failed to update letter',
-                    'status' => false,
-                    'statusCode' => 500,
-                    'error' => $e->getMessage()
-                ], 500);
-            }
+            return response()->json([
+                'message' => 'Letter updated successfully',
+                'status' => true,
+                'statusCode' => 200,
+                'data' => [
+                    'letter' => Letters::find($id),
+                    'file' => $fileData
+                ]
+            ], 200);
             
+        }
+        } catch (\Exception $e) {
+            // Jika terjadi kesalahan saat memperbarui surat
+            return response()->json([
+                'message' => 'Failed to update letter',
+                'status' => false,
+                'statusCode' => 500,
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
     public function delete($id)
         {
