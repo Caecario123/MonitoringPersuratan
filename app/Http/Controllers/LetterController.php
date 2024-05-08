@@ -599,6 +599,7 @@ public function showletter()
             'status' => 'success', 
             'statusCode' => 200,
             'message' => 'Data retrieved successfully',
+            'user' => $type,
             'data' => [
                 'letter' => $letters,
                 'file' => $filteredFiles
