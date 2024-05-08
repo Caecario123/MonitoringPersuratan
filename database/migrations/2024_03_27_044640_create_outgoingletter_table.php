@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('reference_number2')->unique()->comment('Nomor Surat');
             $table->date('outgoing_letter_date')->nullable();
             $table->string('letter_id')->nullable();
+            $table->string('from')->nullable();
             $table->text('note')->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate();
             $table->timestamps();

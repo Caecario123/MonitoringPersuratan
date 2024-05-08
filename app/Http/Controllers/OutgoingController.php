@@ -8,6 +8,7 @@ use App\Models\User;
 use File as files;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -85,12 +86,14 @@ class OutgoingController extends Controller
 
     public function store(Request $request,$id)
     {
+        
         try {
             // Validasi permintaan
             $validator = $request->validate([
                 'reference_number2' => 'required|string',
                 'outgoing_letter_date' => 'required|date',
                 'note' => 'nullable|string',
+                'from' => 'nullable|string',
                 'user_id' => 'nullable|string',
                 'letter_id' => 'nullable|string',
                 'status' => 'nullable|string',
@@ -99,13 +102,16 @@ class OutgoingController extends Controller
     
             // Ambil data dari permintaan
             $data = $request->all();
-    
+            $id = Auth::id();
+            $type = User::where('id', $id)->value('type');
+            
             // Simpan status dari data untuk pembaruan tabel Letters
             $status = $data['status'];
             $letterid = $id;
             $data['user_id'] = $data['user_id']; // $request->input('user_id', auth()->user()->id);
-            $data['letter_id'] = $data[$id];
-            Letters::whereId($letterid)->update(['status' => $status]);
+            $data['letter_id'] = $letterid;
+            $data['from'] = $type; // $request->input('user_id', auth()->user()->id);
+            Letters::whereId($id)->update(['status' => $status]);
     
             unset($data['status']);
     
@@ -136,29 +142,34 @@ class OutgoingController extends Controller
     public function daftarbalasan($id = null)
 {  
     try {
-        
-        
         if ($id === null) {
             $outgoingLetters = OutgoingLetter::all();
             $filteredFiles = Filebalas::all();
-            if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data
+            if ($outgoingLetters->isEmpty()) { 
                 return response()->json([
-                    'status' => false,
-                    'statusCode' => 404,
+                    'status' => true,
+                    'statusCode' => 200,
+                    'data' => [
+                        'replyletter' => [],
+                        'filebalas' => []
+                    ],
                     'message' => 'No outgoing letters found'
-                ], 404);
+                ], 200);
             }
-        } else {
-            $outgoingLetters = OutgoingLetter::where('letter_id', $id)->get();
-            $filebalas = Filebalas::where('letter_balas_id',$id)->get();
-            foreach ($outgoingLetters as $letter) {
-                
-                foreach ($filebalas as $file) {
-                    if ($file->id == $letter->id) {
-                        $filteredFiles[] = $file; // Menambahkan file ke array jika letter_id cocok dengan id dari letters
-                    }
+            } else {
+                $outgoingLetters = OutgoingLetter::where('letter_id', $id)->get();
+                $filteredFiles = [];
+                foreach ($outgoingLetters as $letter) {
+                    $filebalas = Filebalas::where('letter_balas_id',$letter->id)->get();
+                    $filteredFiles[] = $filebalas; 
+                    // foreach ($filebalas as $file) {
+                    //     if ($file->id == $letter->id) {
+                    //         dd($outgoingLetters);
+                            
+                    //        // Menambahkan file ke array jika letter_id cocok dengan id dari letters
+                    //     }    
+                    // }
                 }
-            }
             if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data untuk ID tertentu
                 return response()->json([
                     'status' => false,
@@ -199,6 +210,7 @@ public function detailbalasan($id = null)
             }
         } else {
             $outgoingLetters = OutgoingLetter::where('id', $id)->get();
+            $filebalas = Filebalas::where('letter_balas_id',$id)->get();
             if ($outgoingLetters->isEmpty()) { // Memeriksa jika tidak ada data untuk ID tertentu
                 return response()->json([
                     'status' => false,
@@ -210,7 +222,10 @@ public function detailbalasan($id = null)
         return response()->json([
             'status' => true,
             'statusCode' => 200,
-            'data' => $outgoingLetters,
+            'data' => [
+                'replyletter' => $outgoingLetters,
+                'filebalas' => $filebalas
+            ],
             'message' => 'Data Outgoing Letters retrieved successfully'
         ], 200);
     } catch (\Exception $e) {
