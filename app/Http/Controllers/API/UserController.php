@@ -249,12 +249,14 @@ class UserController extends Controller
 
     // Simpan pengguna baru ke database
     $user->save();
+    $userId = $user->id;
 
     // Kembalikan respon sukses
     return response()->json([
         'status' => true,
         'statusCode' => 201,
-        'message' => 'User berhasil dibuat'
+        'message' => 'User berhasil dibuat',
+        'userId' => $userId
     ], 201);
 }
 public function changePassword(Request $request, $id)
@@ -303,5 +305,6 @@ public function changePassword(Request $request, $id)
         'message' => 'Password berhasil diupdate'
     ], 200);
 }
+    
 }
 
