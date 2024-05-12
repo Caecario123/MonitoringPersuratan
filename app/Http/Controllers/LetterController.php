@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 use App\Models\File;
+use App\Models\Filebalas;
 use App\Models\Letters;
-use App\Models\User;
 
 use App\Models\OutgoingLetter;
-use App\Models\Filebalas;
+use App\Models\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -157,6 +158,36 @@ class LetterController extends Controller
 
         try {
             // Mencari dan menghapus file terkait dengan surat
+        
+            // Mencari dan menghapus outgoing letters terkait dengan surat
+            $outgoingLetters = Outgoingletter::where('letter_id', $id)->get();
+            if ($outgoingLetters->isNotEmpty()) {
+                foreach ($outgoingLetters as $outgoingLetter) {
+                    
+                    $idbalas=$outgoingLetter->id;
+                    $filebalas = Filebalas::where('letter_balas_id', $idbalas)->get();
+                    if ($filebalas->isNotEmpty()) {
+                        foreach ($filebalas as $fb) {
+                            $filePath = $fb->path;
+                            $pdfPath2 = 'app/public/' . $filePath;
+                    
+                            // Mendapatkan path lengkap ke file
+                            $fullPath = storage_path($pdfPath2);
+                    
+                            // Periksa apakah file tersebut ada sebelum mencoba menghapus
+                            if (file_exists($fullPath)) {
+                                unlink($fullPath); // Menghapus file jika ada
+                                $fb->delete(); // Menghapus referensi dari database
+                            } else {
+                                Log::warning('File not found: ' . $fullPath);
+                                // Anda bisa menambahkan kode lain di sini untuk menangani kasus ketika file tidak ditemukan
+                            }
+                        }
+                    }
+                    $outgoingLetter->delete();
+                }
+                
+            }
             $files = File::where('letter_id', $id)->get();
             if ($files->isNotEmpty()) {
                 foreach ($files as $file) {
@@ -164,14 +195,6 @@ class LetterController extends Controller
                         Storage::disk('public')->delete($file->path);
                     }
                     $file->delete();
-                }
-            }
-
-            // Mencari dan menghapus outgoing letters terkait dengan surat
-            $outgoingLetters = Outgoingletter::where('letter_id', $id)->get();
-            if ($outgoingLetters->isNotEmpty()) {
-                foreach ($outgoingLetters as $outgoingLetter) {
-                    $outgoingLetter->delete();
                 }
             }
 
