@@ -102,13 +102,13 @@ class OutgoingController extends Controller
     
             // Ambil data dari permintaan
             $data = $request->all();
-            $id = Auth::id();
-            $type = User::where('id', $id)->value('type');
+            $ids = Auth::id();
+            $type = User::where('id', $ids)->value('type');
             
             // Simpan status dari data untuk pembaruan tabel Letters
             $status = $data['status'];
             $letterid = $id;
-            $data['user_id'] = $data['user_id']; // $request->input('user_id', auth()->user()->id);
+            $data['user_id'] = $ids;// $request->input('user_id', auth()->user()->id);
             $data['letter_id'] = $letterid;
             $data['from'] = $type; // $request->input('user_id', auth()->user()->id);
             Letters::whereId($id)->update(['status' => $status]);
