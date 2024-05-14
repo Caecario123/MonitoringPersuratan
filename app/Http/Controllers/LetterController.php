@@ -666,4 +666,17 @@ public function showletter()
         ], 500);
     }
 }
+public function streamOutgoingPDF($id)
+    {
+
+        $path = File::where('letter_id', $id)->value('path');
+
+        $pdfPath = storage_path('app/public/' . $path);
+
+        $headers = [
+            'Content-Type' => 'application/pdf',
+        ];
+    return response()->file($pdfPath, $headers);
+
+    }
 }

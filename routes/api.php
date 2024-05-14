@@ -72,7 +72,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/coba', [LetterController::class, 'showletter']);
     //rekap
     Route::delete('/cobadelete', [LetterController::class, 'deleteAllFiles']);
-
+    Route::get('/show-file/{id}', [LetterController::class, 'streamOutgoingPDF']);
+    Route::get('/show-file-balas/{id}', [OutgoingController::class, 'streamOutgoingPDF']);
 
 });
 
