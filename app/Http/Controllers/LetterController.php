@@ -1092,36 +1092,4 @@ public function show_surat(request $request)
         ], 500);
     }
 }
-
-public function customPagination($letters, $currentPage, $perPage = 10)
-{
-    // Calculate the starting index of the slice
-    $startIndex = ($currentPage - 1) * $perPage;
-
-    // Slice the collection to get the data for the current page
-    $currentPageData = $letters->slice($startIndex, $perPage)->values();
-
-    // Create a LengthAwarePaginator instance for pagination metadata
-    $paginator = new LengthAwarePaginator(
-        $currentPageData, // Data for the current page
-        $letters->count(), // Total count of items
-        $perPage, // Items per page
-        $currentPage, // Current page
-        ['path' => LengthAwarePaginator::resolveCurrentPath()] // Additional options
-    );
-
-    // Return an array containing pagination metadata and current page data
-    return [
-        'data' => $currentPageData,
-        'pagination' => [
-            'current_page' => $paginator->currentPage(),
-            'last_page' => $paginator->lastPage(),
-            'total' => $paginator->total(),
-        ],
-    ];
-}
-
-
-
-
 }
