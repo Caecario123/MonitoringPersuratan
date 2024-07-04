@@ -20,20 +20,22 @@ use App\Http\Controllers\API\HomeController;
 */
 
 Route::post('login', [UserController::class, 'login']);
-
+Route::get('/show-admin-letters', [LetterController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/show-admin-letters', [LetterController::class, 'show'])
-    ->middleware('user-access:admin');
+    // Route::get('/show-admin-letters', [LetterController::class, 'show'])
+    // ->middleware('user-access:admin');
 
     // Route::get('/letters', [LetterController::class, 'store']);
+    Route::get('logout', [UserController::class, 'logout']);
 
     Route::get('users', [UserController::class, 'index']);
     Route::get('users/{id}', [UserController::class, 'show']);
+    Route::get('profile', [UserController::class, 'show_profile']);
     Route::put('users/{id}', [UserController::class, 'update']);
     Route::delete('users/{id}', [UserController::class, 'delete']);
     Route::post('/users', [UserController::class, 'storeUser']);
@@ -57,10 +59,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/show-detail-letters/{id}', [LetterController::class, 'showdetailletter']);
 
     // menampilkan data rekap
-    Route::get('/show-letters', [LetterController::class, 'showAllLetters']);//rekap
+    Route::get('/show-rekap', [LetterController::class, 'showAllLetters']);
+    //rekap
 
     // disposisi
-    Route::put('/disposition/{id}', [LetterController::class, 'disposisikan']);
+    Route::post('/disposition/{id}', [LetterController::class, 'disposisikan']);
 
     // surat balasan
     Route::delete('/delete-reply/{id}', [OutgoingController::class, 'delete']);
@@ -70,9 +73,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/show-reply/{id}', [OutgoingController::class,  'daftarbalasan']);
     Route::get('/show-reply-detail/{id}', [OutgoingController::class,  'detailbalasan']);
     Route::get('/coba', [LetterController::class, 'showletter']);
+    Route::get('/show-letters', [LetterController::class, 'showletter']);
+    // Route::get('/show-letters', [LetterController::class, 'show_surat']);
+
     //rekap
     Route::delete('/cobadelete', [LetterController::class, 'deleteAllFiles']);
+    Route::get('/show-file/{id}', [LetterController::class, 'streamOutgoingPDF']);
+    Route::get('/show-file/{id}/{type?}', [LetterController::class, 'streamOutgoingPDF']);
 
+    Route::get('/show-dashboard', [LetterController::class, 'dashboard']);
+    // Route::get('/show-page', [LetterController::class, 'showletter']);
+    Route::get('/show-file-balas/{id}', [OutgoingController::class, 'streamOutgoingPDF']);
+    Route::get('/show-notif', [LetterController::class, 'notification_list']);
 
 });
 
